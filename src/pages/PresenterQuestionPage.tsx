@@ -12,14 +12,14 @@ context:
 	
 */
 
-import { ArrayOf4 } from "../../types";
+import { AnswerColors } from "../../types";
 import AnswerCollection from "../components/AnswerCollection";
 import { IonCol, IonContent, IonGrid, IonIcon, IonPage, IonRow } from "@ionic/react";
 
 import { timerOutline } from "ionicons/icons";
 
 export interface PresenterQuestionPageProps {
-	answers: ArrayOf4<string>;
+	answers: Record<AnswerColors, string>;
 	remainingTime: number;
 	submittedAnswers: number;
 	totalUsers: number;

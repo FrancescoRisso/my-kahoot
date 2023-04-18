@@ -12,7 +12,7 @@ context:
 	
 */
 
-import { AnswerColors, ArrayOf4 } from "../../types";
+import { AnswerColors } from "../../types";
 import { useState } from "react";
 import AnswerCollection from "../components/AnswerCollection";
 import { IonCol, IonContent, IonGrid, IonIcon, IonPage, IonRow } from "@ionic/react";
@@ -20,7 +20,7 @@ import { IonCol, IonContent, IonGrid, IonIcon, IonPage, IonRow } from "@ionic/re
 import { timerOutline } from "ionicons/icons";
 
 export interface PresenterQuestionPageProps {
-	answers: ArrayOf4<string>
+	answers: Record<AnswerColors, string>
 	remainingTime: number
 	username: string
 	score: number

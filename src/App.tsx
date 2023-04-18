@@ -24,6 +24,7 @@ import "./App.css";
 import PresenterQuestionPage from "./pages/PresenterQuestionPage";
 import UserQuestionPage from "./pages/UserQuestionPage";
 import UserResultPage from "./pages/UserResultPage";
+import PresenterResultPage from "./pages/PresenterResultPage";
 
 setupIonicReact();
 
@@ -33,7 +34,12 @@ const App: React.FC = () => (
 			<IonRouterOutlet>
 				<Route exact path="/presenterQuestion">
 					<PresenterQuestionPage
-						answers={["A", "B", "C", "D"]}
+						answers={{
+							red: "A",
+							blue: "B",
+							yellow: "C",
+							green: "D"
+						}}
 						remainingTime={12}
 						submittedAnswers={23}
 						totalUsers={30}
@@ -42,7 +48,12 @@ const App: React.FC = () => (
 
 				<Route exact path="/userQuestion">
 					<UserQuestionPage
-						answers={["A", "B", "C", "D"]}
+						answers={{
+							red: "A",
+							blue: "B",
+							yellow: "C",
+							green: "D"
+						}}
 						remainingTime={12}
 						username="Username"
 						score={25}
@@ -53,8 +64,27 @@ const App: React.FC = () => (
 					<UserResultPage thisScore={5} totScore={25} pos={4} username="Username" />
 				</Route>
 
+				<Route exact path="/presenterResult">
+					<PresenterResultPage
+						votes={{
+							red: 4,
+							yellow: 3,
+							blue: 6,
+							green: 8
+						}}
+						answers={{
+							red: "A",
+							blue: "B",
+							yellow: "C",
+							green: "D"
+						}}
+						correctVote="yellow"
+						top3={["Primo", "Secondo", "Tizio"]}
+					/>
+				</Route>
+
 				<Route exact path="/">
-					<Redirect to="/presenterQuestion" />
+					<Redirect to="/presenterResult" />
 				</Route>
 			</IonRouterOutlet>
 		</IonReactRouter>

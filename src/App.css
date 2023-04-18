@@ -7,6 +7,10 @@
 	font-size: xxx-large;
 }
 
+.desktop .smaller {
+	font-size: x-large;
+}
+
 .desktop * {
 	font-size: xx-large;
 }
@@ -18,10 +22,6 @@
 .mobile .bigger {
 	font-size: xx-large;
 }
-
-/* .white-text {
-	color: white !important;
-} */
 
 .h-10-percent {
 	height: 10%;
@@ -55,8 +55,16 @@
 	height: 50%;
 }
 
+.h-60-percent {
+	height: 60%;
+}
+
 .h-75-percent {
 	height: 75%;
+}
+
+.h-80-percent {
+	height: 80%;
 }
 
 .h-85-percent {
@@ -108,4 +116,23 @@
 ion-card.ios {
 	margin-top: 10px !important;
 	margin-bottom: 10px !important;
+}
+
+.large-padding {
+	padding-top: 3%;
+	padding-bottom: 3%;
+	padding-left: 15%;
+	padding-right: 15%;
+}
+
+.graph-col-width {
+	max-width: 100%;
+	width: 100px;
+}
+
+.align-bottom {
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%);
 }
