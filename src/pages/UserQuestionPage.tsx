@@ -15,7 +15,7 @@ context:
 import { AnswerColors, ArrayOf4 } from "../../types";
 import { useEffect, useState } from "react";
 import AnswerCollection from "../components/AnswerCollection";
-import { IonCol, IonGrid, IonIcon, IonRow } from "@ionic/react";
+import { IonCol, IonContent, IonGrid, IonIcon, IonPage, IonRow } from "@ionic/react";
 
 import { timerOutline } from "ionicons/icons";
 
@@ -36,37 +36,39 @@ const UserQuestionPage = () => {
 	}, []);
 
 	return (
-		<div className="mobile h-100-percent">
-			<IonGrid className="h-20-percent">
-				<IonRow className="ion-align-items-center h-50-percent">
-					<IonCol>
-						<p className="no-margin ion-text-center">{username}</p>
-					</IonCol>
-				</IonRow>
-				<IonRow className="ion-align-items-center h-50-percent">
-					<IonCol>
-						<p className="ion-margin-end no-margin ion-padding-start">{score} pt</p>
-					</IonCol>
-					<IonCol>
-						<p className="ion-text-right bigger no-margin ion-padding-end">
-							<IonIcon icon={timerOutline} /> {time}
-						</p>
-					</IonCol>
-				</IonRow>
-			</IonGrid>
-			<h1 className="h-30-percent ion-text-center center-text-vertically no-margin">
-				Un animatore dovrebbe essere...
-			</h1>
-			<AnswerCollection
-				cssClasses="h-50-percent"
-				answers={answers}
-				answersPerRow={2}
-				clickAction={(color: AnswerColors) => {
-					setAnswer(color);
-				}}
-				selected={answer}
-			/>
-		</div>
+		<IonPage>
+			<IonContent color="light" className="mobile">
+				<IonGrid className="h-20-percent">
+					<IonRow className="ion-align-items-center h-50-percent">
+						<IonCol>
+							<p className="no-margin ion-text-center">{username}</p>
+						</IonCol>
+					</IonRow>
+					<IonRow className="ion-align-items-center h-50-percent">
+						<IonCol>
+							<p className="ion-margin-end bigger no-margin ion-padding-start">{score} pt</p>
+						</IonCol>
+						<IonCol>
+							<p className="ion-text-right bigger no-margin ion-padding-end">
+								<IonIcon icon={timerOutline} /> {time}
+							</p>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
+				<h1 className="h-30-percent ion-text-center center-text-vertically no-margin">
+					Un animatore dovrebbe essere...
+				</h1>
+				<AnswerCollection
+					cssClasses="h-50-percent"
+					answers={answers}
+					answersPerRow={2}
+					clickAction={(color: AnswerColors) => {
+						setAnswer(color);
+					}}
+					selected={answer}
+				/>
+			</IonContent>
+		</IonPage>
 	);
 };
 

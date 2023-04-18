@@ -15,6 +15,10 @@
 	font-size: x-large;
 }
 
+.mobile .bigger {
+	font-size: xx-large;
+}
+
 /* .white-text {
 	color: white !important;
 } */
@@ -51,6 +55,18 @@
 	height: 50%;
 }
 
+.h-75-percent {
+	height: 75%;
+}
+
+.h-85-percent {
+	height: 85%;
+}
+
+.h-90-percent {
+	height: 90%;
+}
+
 .h-100-percent {
 	height: 100%;
 }
@@ -62,6 +78,10 @@
 
 .no-margin {
 	margin: 0;
+}
+
+.no-margin-bottom {
+	margin-bottom: 0;
 }
 
 .center-text-vertically {
@@ -77,4 +97,15 @@
 
 .disabled-opaque {
 	opacity: 1;
+}
+
+.justify-elements-vertically {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+ion-card.ios {
+	margin-top: 10px !important;
+	margin-bottom: 10px !important;
 }

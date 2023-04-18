@@ -23,6 +23,7 @@ import "./theme/variables.css";
 import "./App.css";
 import PresenterQuestionPage from "./pages/PresenterQuestionPage";
 import UserQuestionPage from "./pages/UserQuestionPage";
+import UserResultPage from "./pages/UserResultPage";
 
 setupIonicReact();
 
@@ -36,6 +37,10 @@ const App: React.FC = () => (
 
 				<Route exact path="/userQuestion">
 					<UserQuestionPage />
+				</Route>
+
+				<Route exact path="/userResult">
+					<UserResultPage />
 				</Route>
 
 				<Route exact path="/">
