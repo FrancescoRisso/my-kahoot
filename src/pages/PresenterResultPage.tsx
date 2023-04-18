@@ -15,7 +15,7 @@ context:
 */
 
 import { IonContent, IonPage } from "@ionic/react";
-import { AnswerColors, ArrayOf3 } from "../../types";
+import { AnswerColors } from "../../types";
 import AnswerCollection from "../components/AnswerCollection";
 import VoteGraph from "../components/VoteGraph";
 
