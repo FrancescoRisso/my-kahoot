@@ -22,6 +22,7 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 import "./App.css";
 import PresenterQuestionPage from "./pages/PresenterQuestionPage";
+import UserQuestionPage from "./pages/UserQuestionPage";
 
 setupIonicReact();
 
@@ -31,6 +32,10 @@ const App: React.FC = () => (
 			<IonRouterOutlet>
 				<Route exact path="/presenterQuestion">
 					<PresenterQuestionPage />
+				</Route>
+
+				<Route exact path="/userQuestion">
+					<UserQuestionPage />
 				</Route>
 
 				<Route exact path="/">
