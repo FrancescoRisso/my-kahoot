@@ -32,15 +32,25 @@ const App: React.FC = () => (
 		<IonReactRouter>
 			<IonRouterOutlet>
 				<Route exact path="/presenterQuestion">
-					<PresenterQuestionPage />
+					<PresenterQuestionPage
+						answers={["A", "B", "C", "D"]}
+						remainingTime={12}
+						submittedAnswers={23}
+						totalUsers={30}
+					/>
 				</Route>
 
 				<Route exact path="/userQuestion">
-					<UserQuestionPage />
+					<UserQuestionPage
+						answers={["A", "B", "C", "D"]}
+						remainingTime={12}
+						username="Username"
+						score={25}
+					/>
 				</Route>
 
 				<Route exact path="/userResult">
-					<UserResultPage />
+					<UserResultPage thisScore={5} totScore={25} pos={4} username="Username" />
 				</Route>
 
 				<Route exact path="/">

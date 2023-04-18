@@ -13,27 +13,21 @@ context:
 */
 
 import { AnswerColors, ArrayOf4 } from "../../types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AnswerCollection from "../components/AnswerCollection";
 import { IonCol, IonContent, IonGrid, IonIcon, IonPage, IonRow } from "@ionic/react";
 
 import { timerOutline } from "ionicons/icons";
 
-export interface PresenterQuestionPageProps {}
+export interface PresenterQuestionPageProps {
+	answers: ArrayOf4<string>
+	remainingTime: number
+	username: string
+	score: number
+}
 
-const UserQuestionPage = () => {
-	const [answers, setAnswers] = useState<ArrayOf4<string>>(["", "", "", ""]);
-	const [time, setTime] = useState<number>(0);
-	const [username, setUsername] = useState<string>("");
-	const [score, setScore] = useState<number>(0);
+const UserQuestionPage = ({answers, remainingTime, username, score}:PresenterQuestionPageProps) => {
 	const [answer, setAnswer] = useState<AnswerColors | null>(null);
-
-	useEffect(() => {
-		setAnswers(["A", "B", "C", "D"]);
-		setTime(12);
-		setUsername("Username");
-		setScore(25);
-	}, []);
 
 	return (
 		<IonPage>
@@ -50,7 +44,7 @@ const UserQuestionPage = () => {
 						</IonCol>
 						<IonCol>
 							<p className="ion-text-right bigger no-margin ion-padding-end">
-								<IonIcon icon={timerOutline} /> {time}
+								<IonIcon icon={timerOutline} /> {remainingTime}
 							</p>
 						</IonCol>
 					</IonRow>

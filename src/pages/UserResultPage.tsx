@@ -25,23 +25,15 @@ import {
 	IonPage,
 	IonRow
 } from "@ionic/react";
-import { useEffect, useState } from "react";
 
-export interface UserResultPageProps {}
+export interface UserResultPageProps {
+	thisScore: number;
+	totScore: number;
+	pos: number;
+	username: string;
+}
 
-const UserResultPage = () => {
-	const [thisScore, setThisScore] = useState<number>(0);
-	const [totScore, setTotScore] = useState<number>(0);
-	const [pos, setPos] = useState<number>(0);
-	const [username, setUsername] = useState<string>("");
-
-	useEffect(() => {
-		setThisScore(5);
-		setTotScore(120);
-		setPos(4);
-		setUsername("Username");
-	}, []);
-
+const UserResultPage = ({ thisScore, totScore, pos, username }: UserResultPageProps) => {
 	return (
 		<IonPage>
 			<IonContent color="light">
