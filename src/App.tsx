@@ -79,7 +79,6 @@ const App: React.FC = () => (
 							green: "D"
 						}}
 						correctVote="yellow"
-						top3={["Primo", "Secondo", "Tizio"]}
 					/>
 				</Route>
 

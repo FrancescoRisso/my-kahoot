@@ -23,10 +23,9 @@ export interface PresenterResultPageProps {
 	votes: Record<AnswerColors, number>;
 	correctVote: AnswerColors;
 	answers: Record<AnswerColors, string>;
-	top3: ArrayOf3<string>;
 }
 
-const PresenterResultPage = ({ votes, correctVote, answers, top3 }: PresenterResultPageProps) => {
+const PresenterResultPage = ({ votes, correctVote, answers }: PresenterResultPageProps) => {
 	return (
 		<IonPage>
 			<IonContent className="desktop" color="light">
