@@ -154,3 +154,11 @@ ion-card.ios {
 	top: 50%;
 	transform: translateY(-50%);
 }
+
+.very-very-big.desktop {
+	font-size: 60vh;
+}
+
+.very-very-big.mobile {
+	font-size: 40vh;
+}

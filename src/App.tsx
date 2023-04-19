@@ -31,6 +31,7 @@ import UserLoginPage from "./pages/UserRegisterPage";
 import { useState } from "react";
 import UserWaitingPage from "./pages/UserWaitingPage";
 import PresenterWordsRecap from "./pages/PresenterWordsRecap";
+import PresenterCountdownPage from "./pages/CountdownPage";
 
 setupIonicReact();
 
@@ -175,8 +176,16 @@ const App: React.FC = () => {
 						/>
 					</Route>
 
+					<Route exact path="/presenterCountDown">
+						<PresenterCountdownPage timeLeft={3} device="desktop" />
+					</Route>
+
+					<Route exact path="/userCountDown">
+						<PresenterCountdownPage timeLeft={3} device="mobile" />
+					</Route>
+
 					<Route>
-						<Redirect to="/presenterWordsRecap" />
+						<Redirect to="/presenterCountDown" />
 					</Route>
 				</IonRouterOutlet>
 			</IonReactRouter>
