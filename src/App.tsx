@@ -33,6 +33,7 @@ import UserWaitingPage from "./pages/UserWaitingPage";
 import PresenterWordsRecap from "./pages/PresenterWordsRecap";
 import PresenterCountdownPage from "./pages/CountdownPage";
 import PresenterTextPage from "./pages/PresenterTextPage";
+import AdminPage from "./pages/AdminPage";
 
 setupIonicReact();
 
@@ -186,11 +187,22 @@ const App: React.FC = () => {
 					</Route>
 
 					<Route exact path="/presenterTextPage">
-						<PresenterTextPage text={["Prova", "Altro test"]}/>
+						<PresenterTextPage text={["Prova", "Altro test"]} />
+					</Route>
+
+					<Route exact path="/admin">
+						<AdminPage
+							allWords={Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map((l) => [
+								`${l}0`,
+								`${l}1`,
+								`${l}2`,
+								`${l}3`
+							])}
+						/>
 					</Route>
 
 					<Route>
-						<Redirect to="/presenterTextPage" />
+						<Redirect to="/admin" />
 					</Route>
 				</IonRouterOutlet>
 			</IonReactRouter>

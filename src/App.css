@@ -100,7 +100,7 @@
 	margin-bottom: 0;
 }
 
-.only-margin-top { 
+.only-margin-top {
 	margin-bottom: 0;
 	margin-top: 40px;
 }
@@ -170,4 +170,26 @@ ion-card.ios {
 
 .very-very-big.mobile {
 	font-size: 40vh;
+}
+
+.scroll-y {
+	overflow-y: scroll;
+}
+
+.border-bottom {
+	border: 0px;
+	border-bottom: 1px;
+	border-color: black;
+	border-style: solid;
+}
+
+.bigger-checkbox {
+	width: 60%;
+	height: auto;
+}
+
+.bigger-button {
+	width: 60%;
+	height: 60%;
+	font-size: larger;
 }
