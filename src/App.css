@@ -7,6 +7,10 @@
 	font-size: xxx-large;
 }
 
+.desktop .even-bigger {
+	font-size: 10vh;
+}
+
 .desktop .smaller {
 	font-size: x-large;
 }
@@ -94,6 +98,11 @@
 
 .no-margin-bottom {
 	margin-bottom: 0;
+}
+
+.only-margin-top { 
+	margin-bottom: 0;
+	margin-top: 40px;
 }
 
 .center-text-vertically {
