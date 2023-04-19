@@ -27,113 +27,123 @@ import UserResultPage from "./pages/UserResultPage";
 import PresenterResultPage from "./pages/PresenterResultPage";
 import PresenterRankingPage from "./pages/PresenterLeaderboardPage";
 import RequirePassword from "./components/RequirePassword";
+import UserLoginPage from "./pages/UserRegisterPage";
+import { useState } from "react";
 
 setupIonicReact();
 
-const App: React.FC = () => (
-	<IonApp>
-		<IonReactRouter>
-			<IonRouterOutlet>
-				<Route exact path="/presenterQuestion">
-					<PresenterQuestionPage
-						answers={{
-							red: "A",
-							blue: "B",
-							yellow: "C",
-							green: "D"
-						}}
-						remainingTime={12}
-						submittedAnswers={23}
-						totalUsers={30}
-					/>
-				</Route>
+const App: React.FC = () => {
+	const [username, setUsername] = useState<string>("");
 
-				<Route exact path="/userQuestion">
-					<UserQuestionPage
-						answers={{
-							red: "A",
-							blue: "B",
-							yellow: "C",
-							green: "D"
-						}}
-						remainingTime={12}
-						username="Username"
-						score={25}
-					/>
-				</Route>
+	return (
+		<IonApp>
+			<IonReactRouter>
+				<IonRouterOutlet>
+					<Route exact path="/presenterQuestion">
+						<PresenterQuestionPage
+							answers={{
+								red: "A",
+								blue: "B",
+								yellow: "C",
+								green: "D"
+							}}
+							remainingTime={12}
+							submittedAnswers={23}
+							totalUsers={30}
+						/>
+					</Route>
 
-				<Route exact path="/userResult">
-					<UserResultPage thisScore={5} totScore={25} pos={4} username="Username" />
-				</Route>
+					<Route exact path="/userQuestion">
+						<UserQuestionPage
+							answers={{
+								red: "A",
+								blue: "B",
+								yellow: "C",
+								green: "D"
+							}}
+							remainingTime={12}
+							username="Username"
+							score={25}
+						/>
+					</Route>
 
-				<Route exact path="/presenterResult">
-					<PresenterResultPage
-						votes={{
-							red: 4,
-							yellow: 3,
-							blue: 6,
-							green: 8
-						}}
-						answers={{
-							red: "A",
-							blue: "B",
-							yellow: "C",
-							green: "D"
-						}}
-						correctVote="yellow"
-					/>
-				</Route>
+					<Route exact path="/userResult">
+						<UserResultPage thisScore={5} totScore={25} pos={4} username="Username" />
+					</Route>
 
-				<Route exact path="/presenterRanking">
-					<PresenterRankingPage
-						ranking={[
-							"Prova",
-							"Ciao",
-							"Utente",
-							"Pippo",
-							"Mario",
-							"Tizio",
-							"Caio",
-							"Sempronio",
-							"Buh",
-							"Test",
-							"Ultimo",
-							"Prova nome lungo",
-							"Help",
-							"Nome123",
-							"Quindicesimo",
-							"Prova",
-							"Ciao",
-							"Utente",
-							"Pippo",
-							"Mario",
-							"Tizio",
-							"Caio",
-							"Sempronio",
-							"Buh",
-							"Test",
-							"Ultimo",
-							"==> Max 22 caratteri <==",
-							"Help",
-							"Nome123",
-							"Non più quindicesimo"
-						]}
-					/>
-				</Route>
+					<Route exact path="/presenterResult">
+						<PresenterResultPage
+							votes={{
+								red: 4,
+								yellow: 3,
+								blue: 6,
+								green: 8
+							}}
+							answers={{
+								red: "A",
+								blue: "B",
+								yellow: "C",
+								green: "D"
+							}}
+							correctVote="yellow"
+						/>
+					</Route>
 
-				<Route exact path="/pwd">
-					<RequirePassword
-						password="prova"
-						content={<UserResultPage thisScore={5} totScore={25} pos={4} username="Username" />}
-					/>
-				</Route>
+					<Route exact path="/presenterRanking">
+						<PresenterRankingPage
+							ranking={[
+								"Prova",
+								"Ciao",
+								"Utente",
+								"Pippo",
+								"Mario",
+								"Tizio",
+								"Caio",
+								"Sempronio",
+								"Buh",
+								"Test",
+								"Ultimo",
+								"Prova nome lungo",
+								"Help",
+								"Nome123",
+								"Quindicesimo",
+								"Prova",
+								"Ciao",
+								"Utente",
+								"Pippo",
+								"Mario",
+								"Tizio",
+								"Caio",
+								"Sempronio",
+								"Buh",
+								"Test",
+								"Ultimo",
+								"==> Max 22 caratteri <==",
+								"Help",
+								"Nome123",
+								"Non più quindicesimo"
+							]}
+						/>
+					</Route>
 
-				<Route>
-					<Redirect to="/pwd" />
-				</Route>
-			</IonRouterOutlet>
-		</IonReactRouter>
-	</IonApp>
-);
+					<Route exact path="/pwd">
+						<RequirePassword
+							password="prova"
+							content={<UserResultPage thisScore={5} totScore={25} pos={4} username="Username" />}
+						/>
+					</Route>
+
+					<Route exact path="/userLogin">
+						<UserLoginPage username={username} onUsernameChange={setUsername} usernameTaken={false} />
+					</Route>
+
+					<Route>
+						<Redirect to="/userLogin" />
+					</Route>
+				</IonRouterOutlet>
+			</IonReactRouter>
+		</IonApp>
+	);
+};
 
 export default App;
