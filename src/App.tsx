@@ -26,6 +26,7 @@ import UserQuestionPage from "./pages/UserQuestionPage";
 import UserResultPage from "./pages/UserResultPage";
 import PresenterResultPage from "./pages/PresenterResultPage";
 import PresenterRankingPage from "./pages/PresenterLeaderboardPage";
+import RequirePassword from "./components/RequirePassword";
 
 setupIonicReact();
 
@@ -115,13 +116,20 @@ const App: React.FC = () => (
 							"==> Max 22 caratteri <==",
 							"Help",
 							"Nome123",
-							"Non più quindicesimo",
+							"Non più quindicesimo"
 						]}
 					/>
 				</Route>
 
+				<Route exact path="/pwd">
+					<RequirePassword
+						password="prova"
+						content={<UserResultPage thisScore={5} totScore={25} pos={4} username="Username" />}
+					/>
+				</Route>
+
 				<Route>
-					<Redirect to="/presenterRanking" />
+					<Redirect to="/pwd" />
 				</Route>
 			</IonRouterOutlet>
 		</IonReactRouter>
