@@ -25,6 +25,7 @@ import PresenterQuestionPage from "./pages/PresenterQuestionPage";
 import UserQuestionPage from "./pages/UserQuestionPage";
 import UserResultPage from "./pages/UserResultPage";
 import PresenterResultPage from "./pages/PresenterResultPage";
+import PresenterRankingPage from "./pages/PresenterLeaderboardPage";
 
 setupIonicReact();
 
@@ -82,8 +83,45 @@ const App: React.FC = () => (
 					/>
 				</Route>
 
-				<Route exact path="/">
-					<Redirect to="/presenterResult" />
+				<Route exact path="/presenterRanking">
+					<PresenterRankingPage
+						ranking={[
+							"Prova",
+							"Ciao",
+							"Utente",
+							"Pippo",
+							"Mario",
+							"Tizio",
+							"Caio",
+							"Sempronio",
+							"Buh",
+							"Test",
+							"Ultimo",
+							"Prova nome lungo",
+							"Help",
+							"Nome123",
+							"Quindicesimo",
+							"Prova",
+							"Ciao",
+							"Utente",
+							"Pippo",
+							"Mario",
+							"Tizio",
+							"Caio",
+							"Sempronio",
+							"Buh",
+							"Test",
+							"Ultimo",
+							"==> Max 22 caratteri <==",
+							"Help",
+							"Nome123",
+							"Non più quindicesimo",
+						]}
+					/>
+				</Route>
+
+				<Route>
+					<Redirect to="/presenterRanking" />
 				</Route>
 			</IonRouterOutlet>
 		</IonReactRouter>

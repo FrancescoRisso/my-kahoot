@@ -126,7 +126,7 @@ ion-card.ios {
 }
 
 .graph-col-width {
-	max-width: 100%;
+	max-width: 80%;
 	width: 100px;
 }
 
@@ -135,4 +135,12 @@ ion-card.ios {
 	bottom: 0;
 	left: 50%;
 	transform: translateX(-50%);
+}
+
+.w-100-percent {
+	width: 100%;
+}
+
+.text-transparent {
+	color: transparent;
 }
