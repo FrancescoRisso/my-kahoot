@@ -30,6 +30,7 @@ import RequirePassword from "./components/RequirePassword";
 import UserLoginPage from "./pages/UserRegisterPage";
 import { useState } from "react";
 import UserWaitingPage from "./pages/UserWaitingPage";
+import PresenterWordsRecap from "./pages/PresenterWordsRecap";
 
 setupIonicReact();
 
@@ -142,8 +143,40 @@ const App: React.FC = () => {
 						<UserWaitingPage message="Attendi che il gioco inizi..." spinner />
 					</Route>
 
+					<Route exact path="/presenterWordsRecap">
+						<PresenterWordsRecap
+							words={[
+								"Albero",
+								"Banana",
+								"Cavolfiore",
+								"Dattero",
+								"Emmental",
+								"Fiore di zucca",
+								"Gelato",
+								"Hamburger",
+								"Insalata",
+								"Jalapeno",
+								"Kiwi",
+								"Limone",
+								"Mango",
+								"Noce",
+								"Papaya",
+								"Quiche",
+								"Risotto",
+								"Sugo",
+								"Tonno",
+								"Uva",
+								"Valeriana",
+								"Wafer",
+								"X mi manca",
+								"Yogurt",
+								"Zucca"
+							]}
+						/>
+					</Route>
+
 					<Route>
-						<Redirect to="/userWaitStart" />
+						<Redirect to="/presenterWordsRecap" />
 					</Route>
 				</IonRouterOutlet>
 			</IonReactRouter>
