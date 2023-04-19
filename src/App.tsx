@@ -29,6 +29,7 @@ import PresenterRankingPage from "./pages/PresenterLeaderboardPage";
 import RequirePassword from "./components/RequirePassword";
 import UserLoginPage from "./pages/UserRegisterPage";
 import { useState } from "react";
+import UserWaitingPage from "./pages/UserWaitingPage";
 
 setupIonicReact();
 
@@ -137,8 +138,12 @@ const App: React.FC = () => {
 						<UserLoginPage username={username} onUsernameChange={setUsername} usernameTaken={false} />
 					</Route>
 
+					<Route exact path="/userWaitStart">
+						<UserWaitingPage message="Attendi che il gioco inizi..." spinner />
+					</Route>
+
 					<Route>
-						<Redirect to="/userLogin" />
+						<Redirect to="/userWaitStart" />
 					</Route>
 				</IonRouterOutlet>
 			</IonReactRouter>
