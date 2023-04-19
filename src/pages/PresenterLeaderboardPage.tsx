@@ -14,7 +14,7 @@ context:
 	
 */
 
-import { IonCol, IonContent, IonGrid, IonPage, IonRow } from "@ionic/react";
+import { IonContent, IonGrid, IonPage, IonRow } from "@ionic/react";
 import { useMemo } from "react";
 import OrderedList from "../components/OrderedList";
 
@@ -24,7 +24,6 @@ export interface PresenterRankingPageProps {
 
 const PresenterRankingPage = ({ ranking }: PresenterRankingPageProps) => {
 	const numSplits = useMemo(() => 2, []);
-	const split = useMemo(() => Math.ceil(ranking.length / numSplits), [ranking, numSplits]);
 
 	return (
 		<IonPage>
@@ -44,7 +43,6 @@ const PresenterRankingPage = ({ ranking }: PresenterRankingPageProps) => {
 							items={ranking}
 							numSplits={numSplits}
 							separator=" - "
-							splitsSize={split}
 						/>
 					</IonRow>
 				</IonGrid>

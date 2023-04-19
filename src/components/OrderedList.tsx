@@ -14,16 +14,17 @@ context:
 */
 
 import { IonCol } from "@ionic/react";
+import { useMemo } from "react";
 
 export interface OrderedListProps {
 	items: string[];
 	separator: string;
 	bulletGenerator: (index: number) => string | JSX.Element;
 	numSplits: number;
-	splitsSize: number;
 }
 
-const OrderedList = ({ items, separator, bulletGenerator, numSplits, splitsSize }: OrderedListProps) => {
+const OrderedList = ({ items, separator, bulletGenerator, numSplits }: OrderedListProps) => {
+	const splitsSize = useMemo(() => Math.ceil(items.length / numSplits), [items, numSplits]);
 	return (
 		<>
 			{Array.from(Array(numSplits).keys()).map((colNo) => (
