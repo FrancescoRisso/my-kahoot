@@ -55,7 +55,7 @@ const UserQuestionPage = ({answers, remainingTime, username, score}:PresenterQue
 				<AnswerCollection
 					cssClasses="h-50-percent"
 					answers={answers}
-					answersPerRow={2}
+					answersPerRow={1}
 					clickAction={(color: AnswerColors) => {
 						setAnswer(color);
 					}}
