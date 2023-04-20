@@ -198,6 +198,7 @@ const App: React.FC = () => {
 								`${l}2`,
 								`${l}3`
 							])}
+							device="tablet"
 						/>
 					</Route>
 

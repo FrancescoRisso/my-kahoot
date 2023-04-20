@@ -14,48 +14,53 @@ context:
 	
 */
 
-import { IonButton, IonCheckbox, IonCol, IonContent, IonGrid, IonPage, IonRow } from "@ionic/react";
+import { IonCol, IonContent, IonGrid, IonPage, IonRow } from "@ionic/react";
 import { ArrayOf4 } from "../../types";
-import { useRef } from "react";
+import WordsTable from "../components/WordsTable";
+import ButtonWithVerification from "../components/ButtonWithVerification";
 
 export interface AdminPageProps {
 	allWords: ArrayOf4<string>[];
+	device: "phone" | "tablet";
 }
 
-const AdminPage = ({ allWords }: AdminPageProps) => {
-	const verifyBox = useRef<HTMLIonCheckboxElement>(null);
+const AdminPage = ({ allWords, device }: AdminPageProps) => {
+	if (device === "phone")
+		return (
+			<IonPage>
+				<IonContent color="light">
+					<div className="h-60-percent">
+						<WordsTable allWords={allWords} />
+					</div>
+					<div className="h-40-percent">
+						<ButtonWithVerification
+							layout="horizontal"
+							onClickAction={() => {
+								console.debug("Ciao");
+							}}
+						/>
+					</div>
+				</IonContent>
+			</IonPage>
+		);
 
 	return (
 		<IonPage>
 			<IonContent color="light">
-				<IonGrid className="h-60-percent scroll-y">
-					{allWords.map((row, index) => (
-						<IonRow key={index} className="border-bottom">
-							{row.map((word, index) => (
-								<IonCol key={index}>{word}</IonCol>
-							))}
-						</IonRow>
-					))}
-				</IonGrid>
-				<IonGrid className="h-40-percent">
-					<IonRow className="h-50-percent">
-						<IonCol className="ion-text-center">
-							<IonCheckbox className="bigger-checkbox center-vertically" ref={verifyBox}>
-								Sicura
-							</IonCheckbox>
+				<IonGrid className="h-100-percent">
+					<IonRow className="h-100-percent">
+						<IonCol className="h-100-percent" size="9">
+							<WordsTable allWords={allWords} />
 						</IonCol>
-						<IonCol className="ion-text-center">
-							<IonButton
-								className="center-vertically bigger-button"
-								onClick={() => {
-									if (verifyBox.current?.checked) {
-										verifyBox.current.checked = false;
-										console.debug("Ok");
-									}
-								}}
-							>
-								Avanti
-							</IonButton>
+						<IonCol>
+							<IonGrid className="h-100-percent">
+								<ButtonWithVerification
+									layout="vertical"
+									onClickAction={() => {
+										console.debug("Ciao");
+									}}
+								/>
+							</IonGrid>
 						</IonCol>
 					</IonRow>
 				</IonGrid>
