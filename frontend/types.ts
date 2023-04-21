@@ -23,7 +23,6 @@ export interface StorageConnection {
 	isOk: boolean;
 }
 
-export type messageToServerTypes = "userType" | "userVote" | "userRegister";
 export type messageToServer =
 	| { type: "userType"; userType: userTypes }
 	| { type: "userRegister"; name: string }
@@ -32,7 +31,8 @@ export type messageToServer =
 	| { type: "startGame" }
 	| { type: "nextQuestion" }
 	| { type: "sendLeaderboard" }
-	| { type: "sendCorrectAnswers"; to: userTypes };
+	| { type: "sendCorrectAnswers"; to: userTypes }
+	| { type: "requestNotify"; to: userTypes; notification: string };
 
 export type messageToClient =
 	| { type: "userRegister"; accepted: boolean }
@@ -50,4 +50,5 @@ export type messageToClient =
 	| { type: "lastQuestion" }
 	| { type: "finalLeaderboard"; leaderboard: string[] }
 	| { type: "allAnswers"; answers: ArrayOf4<string>[] }
-	| { type: "correctAnswers"; answers: string[] };
+	| { type: "correctAnswers"; answers: string[] }
+	| { type: "notify"; notification: string };

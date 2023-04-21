@@ -21,7 +21,21 @@ console.log(`Server started on port ${PORT}`);
 type Connection = WebSocket;
 type userTypesExtended = userTypes | "unrecognised";
 type logTypes = "LOG" | "ERR";
-type logDetails = "CONN" | "REGI" | "OCCU" | "TYPE" | "REFU" | "VOTE" | "STAR" | "CDOW" | "VOST" | "VOEN" | "VOAL";
+type logDetails =
+	| "CONN"
+	| "REGI"
+	| "OCCU"
+	| "TYPE"
+	| "REFU"
+	| "VOTE"
+	| "STAR"
+	| "CDOW"
+	| "VOST"
+	| "VOEN"
+	| "VOAL"
+	| "LEAD"
+	| "NOTI"
+	| "ANSW";
 
 const connections: Record<userTypesExtended, Connection[]> = {
 	admin: [],
@@ -322,6 +336,7 @@ wss.on("connection", (conn: Connection) => {
 					c.send(JSON.stringify(reply));
 				});
 
+				log("LOG", "LEAD", "Sending leaderboard to presenters");
 				break;
 
 			case "sendCorrectAnswers":
@@ -334,6 +349,19 @@ wss.on("connection", (conn: Connection) => {
 					c.send(JSON.stringify(reply));
 				});
 
+				log("LOG", "ANSW", `Sending correct answers to ${destUserType}s`);
+				break;
+
+			case "requestNotify":
+				const notification = message.notification;
+				const recipient = message.to;
+
+				connections[recipient].forEach((c) => {
+					const reply: messageToClient = { type: "notify", notification };
+					c.send(JSON.stringify(reply));
+				});
+
+				log("LOG", "NOTI", `Notifying ${recipient}s: "${notification}"`);
 				break;
 		}
 	};
