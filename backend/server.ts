@@ -261,9 +261,6 @@ wss.on("connection", (conn: Connection) => {
 						break;
 				}
 
-				// TODO
-				correctVote = "yellow";
-
 				thisQuestion = {
 					red: shuffledAnswers[0],
 					yellow: shuffledAnswers[1],
