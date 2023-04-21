@@ -18,7 +18,7 @@ console.log(`Server started on port ${PORT}`);
 type Connection = WebSocket;
 type userTypesExtended = userTypes | "unrecognised";
 type logTypes = "LOG" | "ERR";
-type logDetails = "CONN" | "REGI" | "OCCU" | "TYPE";
+type logDetails = "CONN" | "REGI" | "OCCU" | "TYPE" | "REFU";
 
 const connections: Record<userTypesExtended, Connection[]> = {
 	admin: [],
@@ -37,6 +37,8 @@ let answerCount: Record<AnswerColors, number> = {
 	green: 0
 };
 
+let matchStarted: boolean = false;
+
 let usernamesList: string[] = [];
 
 const log = (type: logTypes, details: logDetails, message: string) => {
@@ -44,12 +46,22 @@ const log = (type: logTypes, details: logDetails, message: string) => {
 };
 
 wss.on("connection", (conn: Connection) => {
+	if (matchStarted) {
+		const reply: messageToClient = { type: "gameInProgress" };
+		conn.send(JSON.stringify(reply));
+		conn.close();
+		log("LOG", "REFU", `New unknown refused due to game started`);
+		return;
+	}
+
+	const reply: messageToClient = { type: "connectionAccepted" };
+	conn.send(JSON.stringify(reply));
+	log("LOG", "CONN", `New unknown user has connected`);
+
 	connections.unrecognised.push(conn);
 
 	let userType: userTypesExtended = "unrecognised";
 	let username: string = "";
-
-	log("LOG", "CONN", `New unknown user has connected`);
 
 	conn.onmessage = (ev: MessageEvent) => {
 		const message = JSON.parse(ev.data) as messageToServer;
@@ -72,11 +84,7 @@ wss.on("connection", (conn: Connection) => {
 
 				if (usernamesList.includes(username)) {
 					// username is taken
-					const reply: messageToClient = {
-						type: "userRegister",
-						accepted: false,
-						reason: "usernameAlreadyTaken"
-					};
+					const reply: messageToClient = { type: "userRegister", accepted: false };
 					conn.send(JSON.stringify(reply));
 
 					log("LOG", "OCCU", `A user requested the name "${username}", which is already used`);

@@ -31,6 +31,7 @@ export type messageToServer =
 // | { type: "userVote"; vote: AnswerColors };
 
 export type messageToClient =
-	| { type: "userRegister"; accepted: true }
-	| { type: "userRegister"; accepted: false; reason: "gameInProgress" | "usernameAlreadyTaken" }
+	| { type: "userRegister"; accepted: boolean }
+	| { type: "gameInProgress" }
+	| { type: "connectionAccepted" }
 	| { type: "usernameAvailable"; available: boolean };

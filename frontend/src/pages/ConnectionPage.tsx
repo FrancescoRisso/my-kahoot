@@ -25,20 +25,22 @@ other dependences:
 
 import { IonButton, IonContent, IonPage } from "@ionic/react";
 import { useContext, useState } from "react";
-import { messageToServer, userTypes } from "../../types";
+import { messageToClient, messageToServer, userTypes } from "../../types";
 import { Context } from "../components/Context";
+import UserWaitingPage from "./UserWaitingPage";
+import PresenterTextPage from "./PresenterTextPage";
 
 export interface ConnectionPageProps {
 	userType: userTypes;
 }
 
 const ConnectionPage = ({ userType }: ConnectionPageProps) => {
-	const [connected, setConnected] = useState<boolean>(false);
+	const [connection, setConnection] = useState<"opening" | "accepted" | "refused">("opening");
 
 	const context = useContext(Context);
 
 	// Temporary tests to check functionality of the server
-	if (connected)
+	if (connection == "accepted")
 		return (
 			<>
 				<IonButton
@@ -65,6 +67,15 @@ const ConnectionPage = ({ userType }: ConnectionPageProps) => {
 			</>
 		);
 
+	if (connection === "refused")
+		switch (userType) {
+			case "user":
+				return <UserWaitingPage message="Non si può entrare a partita iniziata" />;
+			case "admin":
+			case "presenter":
+				return <PresenterTextPage text="Partita già iniziata" />;
+		}
+
 	return (
 		<IonPage>
 			<IonContent color="light">
@@ -84,10 +95,14 @@ const ConnectionPage = ({ userType }: ConnectionPageProps) => {
 								console.debug(JSON.stringify(message));
 							});
 
+							ws.addEventListener("message", (msg) => {
+								const message: messageToClient = JSON.parse(msg.data);
+								if (message.type === "connectionAccepted") setConnection("accepted");
+								if (message.type === "gameInProgress") setConnection("refused");
+							});
+
 							// TODO
 							ws.addEventListener("message", (msg) => console.debug(JSON.parse(msg.data)));
-
-							setConnected(true);
 						}}
 					>
 						Entra
