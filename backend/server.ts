@@ -177,6 +177,8 @@ wss.on("connection", (conn: Connection) => {
 					thisRoundScores[username] = 0;
 					numPlayers++;
 
+					bulkSend("presenter", { type: "totUsers", totUsers: numPlayers });
+
 					log("LOG", "REGI", `A user has chosen the name "${username}"`);
 				}
 				break;
@@ -202,7 +204,7 @@ wss.on("connection", (conn: Connection) => {
 					totScores[username] += thisRoundScores[username];
 				}
 
-				bulkSend("presenter", { type: "numReplies", value: answersReceived, totPlayers: numPlayers });
+				bulkSend("presenter", { type: "numReplies", value: answersReceived });
 
 				log("LOG", "VOTE", `${username} voted ${vote}`);
 
@@ -295,7 +297,11 @@ wss.on("connection", (conn: Connection) => {
 							// When vote timer is finished, send the results
 							if (voteTimerCnt < 0) {
 								log("LOG", "VOEN", `Voting closed for question #${questionNumber + 1}`);
-								bulkSend("presenter", { type: "allResults", scores: answerCount });
+								bulkSend("presenter", {
+									type: "allResults",
+									scores: answerCount,
+									correctColor: correctVote
+								});
 
 								const leaderboard = Object.entries(totScores)
 									.sort(([n1, s1], [n2, s2]) => s2 - s1)

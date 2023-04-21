@@ -16,7 +16,7 @@ export interface ContextStructure {
 	ws: StateVariable<WebSocket | null>;
 }
 
-export type implementedNotifications = "showIntro" | "showFinalBlank";
+export type implementedNotifications = "showIntro" | "showServiceInfos" | "showFinalBlank";
 
 export type messageToServer =
 	| { type: "userType"; userType: userTypes }
@@ -34,16 +34,17 @@ export type messageToClient =
 	| { type: "gameInProgress" }
 	| { type: "connectionAccepted" }
 	| { type: "usernameAvailable"; available: boolean }
-	| { type: "numReplies"; value: number; totPlayers: number }
+	| { type: "numReplies"; value: number }
 	| { type: "gameStarted" }
 	| { type: "questions"; questions: Record<AnswerColors, string> }
 	| { type: "countdown"; value: number }
 	| { type: "timeLeft"; value: number }
 	| { type: "userResult"; score: number; totScore: number; position: number }
-	| { type: "allResults"; scores: Record<AnswerColors, number> }
+	| { type: "allResults"; scores: Record<AnswerColors, number>; correctColor: AnswerColors }
 	| { type: "ipAddr"; addr: string }
 	| { type: "lastQuestion" }
 	| { type: "finalLeaderboard"; leaderboard: string[] }
 	| { type: "allAnswers"; answers: ArrayOf4<string>[] }
 	| { type: "correctAnswers"; answers: string[] }
-	| { type: "notify"; notification: implementedNotifications };
+	| { type: "notify"; notification: implementedNotifications }
+	| { type: "totUsers"; totUsers: number };

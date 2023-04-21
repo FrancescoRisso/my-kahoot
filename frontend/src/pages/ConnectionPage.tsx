@@ -23,6 +23,7 @@ import TestingButtons from "../components/TestingButtons";
 import AdminBehaviourPage from "./AdminBehaviourPage";
 import UserBehaviourPage from "./UserBehaviourPage";
 import ip from "../getIp";
+import PresenterBehaviourPage from "./PresenterBehaviourPage";
 
 export interface ConnectionPageProps {
 	userType: userTypes;
@@ -42,8 +43,8 @@ const ConnectionPage = ({ userType, testingButtons }: ConnectionPageProps) => {
 					return <AdminBehaviourPage />;
 				case "user":
 					return <UserBehaviourPage />;
-				default:
-					return <></>;
+				case "presenter":
+					return <PresenterBehaviourPage />;
 			}
 	}
 

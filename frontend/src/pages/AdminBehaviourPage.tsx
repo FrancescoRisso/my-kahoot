@@ -23,7 +23,8 @@ export interface AdminBehaviourPageProps {}
 
 type validStatus =
 	| "blank"
-	| "introduction"
+	| "ABCintro"
+	| "serviceInfos"
 	| "waitForGameStart"
 	| "question"
 	| "lastQuestion"
@@ -84,9 +85,14 @@ const AdminBehaviourPage = () => {
 			case "blank":
 				return () => {
 					sendMessage({ type: "requestNotify", to: "presenter", notification: "showIntro" });
-					setCurrentStatus("introduction");
+					setCurrentStatus("ABCintro");
 				};
-			case "introduction":
+			case "ABCintro":
+				return () => {
+					sendMessage({ type: "requestNotify", to: "presenter", notification: "showServiceInfos" });
+					setCurrentStatus("serviceInfos");
+				};
+			case "serviceInfos":
 				return () => {
 					sendMessage({ type: "startGame" });
 					setCurrentStatus("waitForGameStart");
