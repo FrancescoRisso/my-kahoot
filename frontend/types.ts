@@ -47,4 +47,5 @@ export type messageToClient =
 	| { type: "allResults"; scores: Record<AnswerColors, number> }
 	| { type: "ipAddr"; addr: string }
 	| { type: "lastQuestion" }
-	| { type: "finalLeaderboard"; leaderboard: string[] };
+	| { type: "finalLeaderboard"; leaderboard: string[] }
+	| { type: "allAnswers"; answers: ArrayOf4<string>[] };

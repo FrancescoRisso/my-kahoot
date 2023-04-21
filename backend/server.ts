@@ -109,6 +109,14 @@ wss.on("connection", (conn: Connection) => {
 					conn.send(JSON.stringify(ipInfo));
 				}
 
+				if (userType === "admin") {
+					const reply: messageToClient = {
+						type: "allAnswers",
+						answers: allQuestions.map((question) => [question.correct, ...question.wrong])
+					};
+					conn.send(JSON.stringify(reply));
+				}
+
 				log("LOG", "TYPE", `A user is of type ${userType}`);
 				break;
 
