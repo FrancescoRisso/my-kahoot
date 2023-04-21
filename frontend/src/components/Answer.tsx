@@ -13,7 +13,6 @@ context:
 
 import { IonButton } from "@ionic/react";
 import { AnswerColors } from "../../types";
-import { useState } from "react";
 
 export interface AnswerProps {
 	text: string;
