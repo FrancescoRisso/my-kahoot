@@ -196,3 +196,7 @@ ion-card.ios {
 	height: 60%;
 	font-size: larger;
 }
+
+.highlight {
+	background-color: #0002;
+}

@@ -16,12 +16,7 @@ export interface ContextStructure {
 	ws: StateVariable<WebSocket | null>;
 }
 
-export interface StorageConnection {
-	storeValue: (key: StorageKeys, val: any) => void;
-	getValue: (key: StorageKeys) => any;
-	clearAll: () => void;
-	isOk: boolean;
-}
+export type implementedNotifications = "showIntro" | "showFinalBlank";
 
 export type messageToServer =
 	| { type: "userType"; userType: userTypes }
@@ -32,7 +27,7 @@ export type messageToServer =
 	| { type: "nextQuestion" }
 	| { type: "sendLeaderboard" }
 	| { type: "sendCorrectAnswers"; to: userTypes }
-	| { type: "requestNotify"; to: userTypes; notification: string };
+	| { type: "requestNotify"; to: userTypes; notification: implementedNotifications };
 
 export type messageToClient =
 	| { type: "userRegister"; accepted: boolean }
@@ -51,4 +46,4 @@ export type messageToClient =
 	| { type: "finalLeaderboard"; leaderboard: string[] }
 	| { type: "allAnswers"; answers: ArrayOf4<string>[] }
 	| { type: "correctAnswers"; answers: string[] }
-	| { type: "notify"; notification: string };
+	| { type: "notify"; notification: implementedNotifications };
