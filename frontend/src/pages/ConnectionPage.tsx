@@ -40,29 +40,49 @@ const ConnectionPage = ({ userType }: ConnectionPageProps) => {
 	const context = useContext(Context);
 
 	// Temporary tests to check functionality of the server
-	if (connection == "accepted")
+	if (connection === "accepted")
 		return (
 			<>
+				<p>{userType}</p>
 				<IonButton
 					onClick={() => {
-						context.ws.val?.send(JSON.stringify({ type: "userRegister", name: "pippo" }));
+						const msg: messageToServer = { type: "userRegister", name: "pippo" };
+						context.ws.val?.send(JSON.stringify(msg));
 					}}
 				>
 					Registra pippo
 				</IonButton>
 				<IonButton
 					onClick={() => {
-						context.ws.val?.send(JSON.stringify({ type: "userRegister", name: "pluto" }));
+						const msg: messageToServer = { type: "userRegister", name: "pluto" };
+						context.ws.val?.send(JSON.stringify(msg));
 					}}
 				>
 					Registra pluto
 				</IonButton>
 				<IonButton
 					onClick={() => {
-						context.ws.val?.send(JSON.stringify({ type: "usernameAvailable", name: "pippo" }));
+						const msg: messageToServer = { type: "usernameAvailable", name: "pippo" };
+						context.ws.val?.send(JSON.stringify(msg));
 					}}
 				>
 					Pippo è libero?
+				</IonButton>
+				<IonButton
+					onClick={() => {
+						const msg: messageToServer = { type: "userVote", vote: "yellow" };
+						context.ws.val?.send(JSON.stringify(msg));
+					}}
+				>
+					Vota giallo
+				</IonButton>
+				<IonButton
+					onClick={() => {
+						const msg: messageToServer = { type: "userVote", vote: "green" };
+						context.ws.val?.send(JSON.stringify(msg));
+					}}
+				>
+					Vota verde
 				</IonButton>
 			</>
 		);

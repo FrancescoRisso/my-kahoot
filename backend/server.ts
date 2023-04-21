@@ -18,7 +18,7 @@ console.log(`Server started on port ${PORT}`);
 type Connection = WebSocket;
 type userTypesExtended = userTypes | "unrecognised";
 type logTypes = "LOG" | "ERR";
-type logDetails = "CONN" | "REGI" | "OCCU" | "TYPE" | "REFU";
+type logDetails = "CONN" | "REGI" | "OCCU" | "TYPE" | "REFU" | "VOTE";
 
 const connections: Record<userTypesExtended, Connection[]> = {
 	admin: [],
@@ -36,6 +36,11 @@ let answerCount: Record<AnswerColors, number> = {
 	yellow: 0,
 	green: 0
 };
+
+let correctVote: AnswerColors = "yellow";
+let correctVotesThisTurn: number = 0;
+let numPlayers: number = 0;
+let ansersReceived: number = 0;
 
 let matchStarted: boolean = false;
 
@@ -98,6 +103,7 @@ wss.on("connection", (conn: Connection) => {
 
 					totScores[username] = 0;
 					thisRoundScores[username] = 0;
+					numPlayers++;
 
 					log("LOG", "REGI", `A user has chosen the name "${username}"`);
 				}
@@ -105,12 +111,33 @@ wss.on("connection", (conn: Connection) => {
 
 			case "usernameAvailable":
 				username = message.name;
+
 				const reply: messageToClient = {
 					type: "usernameAvailable",
 					available: !usernamesList.includes(username)
 				};
 				conn.send(JSON.stringify(reply));
 				break;
+
+			case "userVote":
+				const vote = message.vote;
+
+				ansersReceived++;
+				if (vote === correctVote) {
+					thisRoundScores[username] = numPlayers - correctVotesThisTurn++;
+					totScores[username] += thisRoundScores[username];
+				}
+
+				connections.presenter.forEach((c) => {
+					const reply: messageToClient = {
+						type: "numReplies",
+						value: ansersReceived,
+						totPlayers: numPlayers
+					};
+					c.send(JSON.stringify(reply));
+				});
+
+				log("LOG", "VOTE", `${username} voted ${vote}`);
 		}
 	};
 

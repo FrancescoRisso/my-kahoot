@@ -51,6 +51,11 @@ const App: React.FC = () => {
 							<Route exact path="/presenter">
 								<ConnectionPage userType="presenter" />
 							</Route>
+
+							<Route exact path="/user">
+								<ConnectionPage userType="user" />
+							</Route>
+
 							<Route exact path="/presenterQuestion">
 								<PresenterQuestionPage
 									answers={{

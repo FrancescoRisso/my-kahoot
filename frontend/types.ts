@@ -27,11 +27,12 @@ export type messageToServerTypes = "userType" | "userVote" | "userRegister";
 export type messageToServer =
 	| { type: "userType"; userType: userTypes }
 	| { type: "userRegister"; name: string }
-	| { type: "usernameAvailable"; name: string };
-// | { type: "userVote"; vote: AnswerColors };
+	| { type: "usernameAvailable"; name: string }
+	| { type: "userVote"; vote: AnswerColors };
 
 export type messageToClient =
 	| { type: "userRegister"; accepted: boolean }
 	| { type: "gameInProgress" }
 	| { type: "connectionAccepted" }
-	| { type: "usernameAvailable"; available: boolean };
+	| { type: "usernameAvailable"; available: boolean }
+	| { type: "numReplies"; value: number; totPlayers: number };
