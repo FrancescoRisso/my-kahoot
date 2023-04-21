@@ -44,4 +44,5 @@ export type messageToClient =
 	| { type: "timeLeft"; value: number }
 	| { type: "userResult"; score: number; totScore: number; position: number }
 	| { type: "allResults"; scores: Record<AnswerColors, number> }
-	| { type: "ipAddr"; addr: string };
+	| { type: "ipAddr"; addr: string }
+	| { type: "lastQuestion" };

@@ -206,6 +206,12 @@ wss.on("connection", (conn: Connection) => {
 				answersReceived = 0;
 				correctVotesThisTurn = 0;
 
+				if (questionNumber === allQuestions.length - 1)
+					connections.admin.forEach((c) => {
+						const reply: messageToClient = { type: "lastQuestion" };
+						c.send(JSON.stringify(reply));
+					});
+
 				const answers: ArrayOf4<string> = [
 					allQuestions[questionNumber].correct,
 					...allQuestions[questionNumber].wrong
