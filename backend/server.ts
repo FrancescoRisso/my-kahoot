@@ -302,6 +302,19 @@ wss.on("connection", (conn: Connection) => {
 						}, 1000);
 					}
 				}, 1000);
+				break;
+
+			case "sendLeaderboard":
+				const leaderboard = Object.entries(totScores)
+					.sort(([n1, s1], [n2, s2]) => s2 - s1)
+					.map(([name, score]) => name);
+
+				connections.presenter.forEach((c) => {
+					const reply: messageToClient = { type: "finalLeaderboard", leaderboard };
+					c.send(JSON.stringify(reply));
+				});
+
+				break;
 		}
 	};
 

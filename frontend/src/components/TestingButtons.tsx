@@ -101,6 +101,14 @@ const TestingButtons = ({ userType }: TestingButtonsProps) => {
 			>
 				Clear console
 			</IonButton>
+			<IonButton
+				onClick={() => {
+					const msg: messageToServer = { type: "sendLeaderboard" };
+					context.ws.val?.send(JSON.stringify(msg));
+				}}
+			>
+				Manda leaderboard
+			</IonButton>
 		</>
 	);
 };

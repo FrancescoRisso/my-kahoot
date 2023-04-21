@@ -30,7 +30,8 @@ export type messageToServer =
 	| { type: "usernameAvailable"; name: string }
 	| { type: "userVote"; vote: AnswerColors }
 	| { type: "startGame" }
-	| { type: "nextQuestion" };
+	| { type: "nextQuestion" }
+	| { type: "sendLeaderboard" };
 
 export type messageToClient =
 	| { type: "userRegister"; accepted: boolean }
@@ -45,4 +46,5 @@ export type messageToClient =
 	| { type: "userResult"; score: number; totScore: number; position: number }
 	| { type: "allResults"; scores: Record<AnswerColors, number> }
 	| { type: "ipAddr"; addr: string }
-	| { type: "lastQuestion" };
+	| { type: "lastQuestion" }
+	| { type: "finalLeaderboard"; leaderboard: string[] };
