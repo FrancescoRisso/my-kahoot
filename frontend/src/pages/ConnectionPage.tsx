@@ -21,6 +21,8 @@ import UserWaitingPage from "./UserWaitingPage";
 import PresenterTextPage from "./PresenterTextPage";
 import TestingButtons from "../components/TestingButtons";
 import AdminBehaviourPage from "./AdminBehaviourPage";
+import UserBehaviourPage from "./UserBehaviourPage";
+import ip from "../getIp";
 
 export interface ConnectionPageProps {
 	userType: userTypes;
@@ -32,13 +34,14 @@ const ConnectionPage = ({ userType, testingButtons }: ConnectionPageProps) => {
 
 	const context = useContext(Context);
 
-	// Temporary tests to check functionality of the server
 	if (connection === "accepted") {
 		if (testingButtons) return <TestingButtons userType={userType} />;
 		else
 			switch (userType) {
 				case "admin":
 					return <AdminBehaviourPage />;
+				case "user":
+					return <UserBehaviourPage />;
 				default:
 					return <></>;
 			}
@@ -55,18 +58,19 @@ const ConnectionPage = ({ userType, testingButtons }: ConnectionPageProps) => {
 
 	return (
 		<IonPage>
-			<IonContent color="light">
+			<IonContent color="light" className={userType === "user" ? "mobile" : "desktop"}>
 				<div className="ion-text-center center-vertically">
 					<IonButton
 						onClick={() => {
 							console.log("Connecting to the server");
 
-							const ADDR = "localhost";
+							const ADDR = ip;
 							const PORT = 1234;
 							const ws = new WebSocket(`ws://${ADDR}:${PORT}`);
 
 							context.ws.set(ws);
 							ws.addEventListener("open", () => {
+								console.log("Connected");
 								const message: messageToServer = { type: "userType", userType };
 								ws.send(JSON.stringify(message));
 							});

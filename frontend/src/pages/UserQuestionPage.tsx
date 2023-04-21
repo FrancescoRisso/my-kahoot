@@ -20,13 +20,14 @@ import { IonCol, IonContent, IonGrid, IonIcon, IonPage, IonRow } from "@ionic/re
 import { timerOutline } from "ionicons/icons";
 
 export interface PresenterQuestionPageProps {
-	answers: Record<AnswerColors, string>
-	remainingTime: number
-	username: string
-	score: number
+	answers: Record<AnswerColors, string>;
+	remainingTime: number;
+	username: string;
+	score: number;
+	clickEvent: (color: AnswerColors) => void;
 }
 
-const UserQuestionPage = ({answers, remainingTime, username, score}:PresenterQuestionPageProps) => {
+const UserQuestionPage = ({ answers, remainingTime, username, score, clickEvent }: PresenterQuestionPageProps) => {
 	const [answer, setAnswer] = useState<AnswerColors | null>(null);
 
 	return (
@@ -58,6 +59,7 @@ const UserQuestionPage = ({answers, remainingTime, username, score}:PresenterQue
 					answersPerRow={1}
 					clickAction={(color: AnswerColors) => {
 						setAnswer(color);
+						clickEvent(color);
 					}}
 					selected={answer}
 				/>

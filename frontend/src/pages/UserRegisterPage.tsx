@@ -36,9 +36,10 @@ export interface UserLoginPageProps {
 	username: string;
 	onUsernameChange: (newName: string) => void;
 	usernameTaken: boolean;
+	clickEvent: () => void;
 }
 
-const UserLoginPage = ({ username, onUsernameChange, usernameTaken }: UserLoginPageProps) => {
+const UserLoginPage = ({ username, onUsernameChange, usernameTaken, clickEvent }: UserLoginPageProps) => {
 	return (
 		<IonPage>
 			<IonContent color="light" className="mobile">
@@ -47,12 +48,13 @@ const UserLoginPage = ({ username, onUsernameChange, usernameTaken }: UserLoginP
 						<IonCardTitle>Scegli uno username:</IonCardTitle>
 					</IonCardHeader>
 					<IonCardContent>
-						<IonItem fill="outline">
+						<IonItem>
 							<IonInput
 								type="text"
 								value={username}
 								placeholder="Username"
 								color="primary"
+								label=""
 								onInput={(e) => {
 									onUsernameChange(e.currentTarget.value?.toString() ?? "");
 								}}
@@ -67,7 +69,9 @@ const UserLoginPage = ({ username, onUsernameChange, usernameTaken }: UserLoginP
 						<IonGrid className="ion-text-center">
 							<IonRow>
 								<IonCol>
-									<IonButton color="primary">Entra</IonButton>
+									<IonButton color="primary" onClick={clickEvent} disabled={username === ""}>
+										Entra
+									</IonButton>
 								</IonCol>
 							</IonRow>
 						</IonGrid>
