@@ -31,7 +31,8 @@ export type messageToServer =
 	| { type: "userVote"; vote: AnswerColors }
 	| { type: "startGame" }
 	| { type: "nextQuestion" }
-	| { type: "sendLeaderboard" };
+	| { type: "sendLeaderboard" }
+	| { type: "sendCorrectAnswers"; to: userTypes };
 
 export type messageToClient =
 	| { type: "userRegister"; accepted: boolean }
@@ -48,4 +49,5 @@ export type messageToClient =
 	| { type: "ipAddr"; addr: string }
 	| { type: "lastQuestion" }
 	| { type: "finalLeaderboard"; leaderboard: string[] }
-	| { type: "allAnswers"; answers: ArrayOf4<string>[] };
+	| { type: "allAnswers"; answers: ArrayOf4<string>[] }
+	| { type: "correctAnswers"; answers: string[] };

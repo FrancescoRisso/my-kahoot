@@ -323,6 +323,18 @@ wss.on("connection", (conn: Connection) => {
 				});
 
 				break;
+
+			case "sendCorrectAnswers":
+				const destUserType = message.to;
+				connections[destUserType].forEach((c) => {
+					const reply: messageToClient = {
+						type: "correctAnswers",
+						answers: allQuestions.map((question) => question.correct)
+					};
+					c.send(JSON.stringify(reply));
+				});
+
+				break;
 		}
 	};
 
