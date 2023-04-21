@@ -55,7 +55,6 @@ const AdminBehaviourPage = () => {
 				case "connectionAccepted":
 					break;
 				case "gameStarted":
-					console.debug("ReceivedGameStarted");
 					sendMessage({ type: "nextQuestion" });
 					setCurrentStatus("question");
 					setQuestionNo(0);
@@ -93,9 +92,7 @@ const AdminBehaviourPage = () => {
 					setCurrentStatus("waitForGameStart");
 				};
 			case "waitForGameStart":
-				return () => {
-					return;
-				};
+				return () => {};
 			case "question":
 				return () => {
 					sendMessage({ type: "nextQuestion" });
@@ -118,15 +115,11 @@ const AdminBehaviourPage = () => {
 					setCurrentStatus("finalBlank");
 				};
 			case "finalBlank":
-				return () => {
-					return;
-				};
+				return () => {};
 		}
 	}, [currentStatus, sendMessage, questionNo]);
 
-	console.debug(currentStatus, questionNo);
-
-	return <AdminPage highlightedRow={questionNo} allWords={allAnswers} device="phone" nextAction={nextAction()} />;
+	return <AdminPage highlightedRow={questionNo} allWords={allAnswers} device="tablet" nextAction={nextAction()} />;
 };
 
 export default AdminBehaviourPage;

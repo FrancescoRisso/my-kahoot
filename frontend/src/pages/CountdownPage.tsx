@@ -21,7 +21,7 @@ export interface PresenterCountdownPageProps {
 	device: "desktop" | "mobile";
 }
 
-const PresenterCountdownPage = ({ timeLeft, device }: PresenterCountdownPageProps) => {
+const CountdownPage = ({ timeLeft, device }: PresenterCountdownPageProps) => {
 	return (
 		<IonPage>
 			<IonContent color="light">
@@ -31,4 +31,4 @@ const PresenterCountdownPage = ({ timeLeft, device }: PresenterCountdownPageProp
 	);
 };
 
-export default PresenterCountdownPage;
+export default CountdownPage;
