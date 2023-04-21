@@ -29,7 +29,8 @@ export type messageToServer =
 	| { type: "userRegister"; name: string }
 	| { type: "usernameAvailable"; name: string }
 	| { type: "userVote"; vote: AnswerColors }
-	| { type: "startGame" };
+	| { type: "startGame" }
+	| { type: "nextQuestion" };
 
 export type messageToClient =
 	| { type: "userRegister"; accepted: boolean }
@@ -37,4 +38,9 @@ export type messageToClient =
 	| { type: "connectionAccepted" }
 	| { type: "usernameAvailable"; available: boolean }
 	| { type: "numReplies"; value: number; totPlayers: number }
-	| { type: "gameStarted" };
+	| { type: "gameStarted" }
+	| { type: "questions"; questions: Record<AnswerColors, string> }
+	| { type: "countdown"; value: number }
+	| { type: "timeLeft"; value: number }
+	| { type: "userResult"; score: number; totScore: number; position: number }
+	| { type: "allResults"; scores: Record<AnswerColors, number> };

@@ -1,10 +1,12 @@
-import type { AnswerColors, messageToServer, userTypes } from "../frontend/types";
-import { messageToClient } from "../frontend/types";
+import type { AnswerColors, ArrayOf4, messageToServer, userTypes, messageToClient } from "../frontend/types";
+
+import allQuestions from "./allQuestions";
 
 const webSocket = require("ws");
 const moment = require("moment");
 const express = require("express");
 const http = require("http");
+const _ = require("underscore");
 
 const PORT = 1234;
 
@@ -18,7 +20,7 @@ console.log(`Server started on port ${PORT}`);
 type Connection = WebSocket;
 type userTypesExtended = userTypes | "unrecognised";
 type logTypes = "LOG" | "ERR";
-type logDetails = "CONN" | "REGI" | "OCCU" | "TYPE" | "REFU" | "VOTE";
+type logDetails = "CONN" | "REGI" | "OCCU" | "TYPE" | "REFU" | "VOTE" | "STAR" | "CDOW" | "VOST" | "VOEN" | "VOAL";
 
 const connections: Record<userTypesExtended, Connection[]> = {
 	admin: [],
@@ -40,9 +42,22 @@ let answerCount: Record<AnswerColors, number> = {
 let correctVote: AnswerColors = "yellow";
 let correctVotesThisTurn: number = 0;
 let numPlayers: number = 0;
-let ansersReceived: number = 0;
+let answersReceived: number = 0;
+
+let usernameConn: Record<string, Connection> = {};
+
+let thisQuestion: Record<AnswerColors, string> = { red: "", yellow: "", green: "", blue: "" };
+let questionNumber: number = -1;
 
 let matchStarted: boolean = false;
+
+let countdownInterval: NodeJS.Timer;
+let votingInterval: NodeJS.Timer;
+
+const secondsCountdown = 3;
+let countdownCnt: number;
+const secondsVote = 15;
+let voteTimerCnt: number;
 
 let usernamesList: string[] = [];
 
@@ -106,6 +121,7 @@ wss.on("connection", (conn: Connection) => {
 				} else {
 					// username is free
 					usernamesList.push(username);
+					usernameConn[username] = conn;
 
 					const reply: messageToClient = { type: "userRegister", accepted: true };
 					conn.send(JSON.stringify(reply));
@@ -131,7 +147,9 @@ wss.on("connection", (conn: Connection) => {
 			case "userVote":
 				const vote = message.vote;
 
-				ansersReceived++;
+				answersReceived++;
+				answerCount[vote]++;
+
 				if (vote === correctVote) {
 					thisRoundScores[username] = numPlayers - correctVotesThisTurn++;
 					totScores[username] += thisRoundScores[username];
@@ -140,13 +158,18 @@ wss.on("connection", (conn: Connection) => {
 				connections.presenter.forEach((c) => {
 					const reply: messageToClient = {
 						type: "numReplies",
-						value: ansersReceived,
+						value: answersReceived,
 						totPlayers: numPlayers
 					};
 					c.send(JSON.stringify(reply));
 				});
 
 				log("LOG", "VOTE", `${username} voted ${vote}`);
+
+				if (answersReceived === numPlayers) {
+					voteTimerCnt = 0;
+					log("LOG", "VOAL", "Everybody voted");
+				}
 				break;
 
 			case "startGame":
@@ -156,7 +179,110 @@ wss.on("connection", (conn: Connection) => {
 					c.send(JSON.stringify(reply));
 				});
 
+				log("LOG", "STAR", "Starting the game");
+
 				break;
+
+			case "nextQuestion":
+				questionNumber++;
+				Object.keys(thisRoundScores).forEach((name) => (thisRoundScores[name] = 0));
+				answerCount.red = 0;
+				answerCount.blue = 0;
+				answerCount.yellow = 0;
+				answerCount.green = 0;
+				answersReceived = 0;
+				correctVotesThisTurn = 0;
+
+				const answers: ArrayOf4<string> = [
+					allQuestions[questionNumber].correct,
+					...allQuestions[questionNumber].wrong
+				];
+				const shuffledAnswers = _.shuffle(answers) as ArrayOf4<string>;
+
+				switch (shuffledAnswers.indexOf(allQuestions[questionNumber].correct)) {
+					case 0:
+						correctVote = "red";
+						break;
+					case 1:
+						correctVote = "yellow";
+						break;
+					case 2:
+						correctVote = "blue";
+						break;
+					case 3:
+						correctVote = "green";
+						break;
+				}
+
+				// TODO
+				correctVote = "yellow";
+
+				thisQuestion = {
+					red: shuffledAnswers[0],
+					yellow: shuffledAnswers[1],
+					blue: shuffledAnswers[2],
+					green: shuffledAnswers[3]
+				};
+
+				// Start countdown
+				log("LOG", "CDOW", `Starting countdown for question #${questionNumber + 1}`);
+				countdownCnt = secondsCountdown;
+				countdownInterval = setInterval(() => {
+					if (countdownCnt === 0) clearInterval(countdownInterval);
+
+					[...connections.presenter, ...connections.user].forEach((c) => {
+						const reply: messageToClient = { type: "countdown", value: countdownCnt };
+						c.send(JSON.stringify(reply));
+					});
+
+					--countdownCnt;
+
+					// Once countdown is finished, send the questions and start the timer
+					if (countdownCnt == -1) {
+						log("LOG", "VOST", `Starting voting on question #${questionNumber + 1}`);
+
+						[...connections.presenter, ...connections.user].forEach((c) => {
+							const reply: messageToClient = { type: "questions", questions: thisQuestion };
+							c.send(JSON.stringify(reply));
+						});
+
+						voteTimerCnt = secondsVote;
+						votingInterval = setInterval(() => {
+							if (voteTimerCnt === 0) clearInterval(votingInterval);
+
+							[...connections.presenter, ...connections.user].forEach((c) => {
+								const reply: messageToClient = { type: "timeLeft", value: voteTimerCnt };
+								c.send(JSON.stringify(reply));
+							});
+
+							--voteTimerCnt;
+
+							// When vote timer is finished, send the results
+							if (voteTimerCnt < 0) {
+								log("LOG", "VOEN", `Voting closed for question #${questionNumber + 1}`);
+								connections.presenter.forEach((c) => {
+									const reply: messageToClient = { type: "allResults", scores: answerCount };
+									c.send(JSON.stringify(reply));
+								});
+
+								const leaderboard = Object.entries(totScores)
+									.sort(([n1, s1], [n2, s2]) => s2 - s1)
+									.map(([name, score]) => name);
+
+								connections.user.forEach((c, index) => {
+									const user = Object.entries(usernameConn).filter(([u, c2]) => c2 === c)[0][0];
+									const reply: messageToClient = {
+										type: "userResult",
+										score: thisRoundScores[user],
+										totScore: totScores[user],
+										position: 1 + leaderboard.indexOf(user)
+									};
+									c.send(JSON.stringify(reply));
+								});
+							}
+						}, 1000);
+					}
+				}, 1000);
 		}
 	};
 

@@ -86,11 +86,26 @@ const ConnectionPage = ({ userType }: ConnectionPageProps) => {
 				</IonButton>
 				<IonButton
 					onClick={() => {
-						const msg: messageToServer = { type: "startGame"};
+						const msg: messageToServer = { type: "startGame" };
 						context.ws.val?.send(JSON.stringify(msg));
 					}}
 				>
 					Inizia partita
+				</IonButton>
+				<IonButton
+					onClick={() => {
+						const msg: messageToServer = { type: "nextQuestion" };
+						context.ws.val?.send(JSON.stringify(msg));
+					}}
+				>
+					Prossima domanda
+				</IonButton>
+				<IonButton
+					onClick={() => {
+						console.clear();
+					}}
+				>
+					Clear console
 				</IonButton>
 			</>
 		);
