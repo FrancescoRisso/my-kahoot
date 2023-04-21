@@ -35,7 +35,8 @@ type logDetails =
 	| "VOAL"
 	| "LEAD"
 	| "NOTI"
-	| "ANSW";
+	| "ANSW"
+	| "CLOS";
 
 const connections: Record<userTypesExtended, Connection[]> = {
 	admin: [],
@@ -81,7 +82,7 @@ const log = (type: logTypes, details: logDetails, message: string) => {
 };
 
 const bulkSend = (
-	recipient: userTypes | userTypes[],
+	recipient: userTypesExtended | userTypesExtended[],
 	message: messageToClient | ((c: Connection) => messageToClient)
 ) => {
 	if (!Array.isArray(recipient)) recipient = [recipient];
@@ -214,6 +215,14 @@ wss.on("connection", (conn: Connection) => {
 			case "startGame":
 				matchStarted = true;
 
+				bulkSend("unrecognised", { type: "gameInProgress" });
+				connections.user.forEach((c) => {
+					if (!Object.values(usernameConn).includes(c)) {
+						c.send(JSON.stringify({ type: "gameInProgress" } as messageToClient));
+						c.close();
+					}
+				});
+
 				bulkSend("admin", { type: "gameStarted" });
 
 				log("LOG", "STAR", "Starting the game");
@@ -343,5 +352,10 @@ wss.on("connection", (conn: Connection) => {
 
 	conn.onclose = (ev: CloseEvent) => {
 		connections[userType].splice(connections[userType].indexOf(conn), 1);
+		log(
+			"LOG",
+			"CLOS",
+			userType === "user" ? `User ${username} closed connection` : `A ${userType} closed connection`
+		);
 	};
 });
