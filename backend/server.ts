@@ -80,6 +80,17 @@ const log = (type: logTypes, details: logDetails, message: string) => {
 	console.log(`${moment().format("YYYY-MM-DD HH:mm:ss")}\t[${type}]\t[${details}]\t${message}`);
 };
 
+const bulkSend = (
+	recipient: userTypes | userTypes[],
+	message: messageToClient | ((c: Connection) => messageToClient)
+) => {
+	if (!Array.isArray(recipient)) recipient = [recipient];
+
+	recipient.forEach((rec) => {
+		connections[rec].forEach((c) => c.send(JSON.stringify(typeof message === "function" ? message(c) : message)));
+	});
+};
+
 wss.on("connection", (conn: Connection) => {
 	if (matchStarted) {
 		const reply: messageToClient = { type: "gameInProgress" };
@@ -190,14 +201,7 @@ wss.on("connection", (conn: Connection) => {
 					totScores[username] += thisRoundScores[username];
 				}
 
-				connections.presenter.forEach((c) => {
-					const reply: messageToClient = {
-						type: "numReplies",
-						value: answersReceived,
-						totPlayers: numPlayers
-					};
-					c.send(JSON.stringify(reply));
-				});
+				bulkSend("presenter", { type: "numReplies", value: answersReceived, totPlayers: numPlayers });
 
 				log("LOG", "VOTE", `${username} voted ${vote}`);
 
@@ -209,13 +213,10 @@ wss.on("connection", (conn: Connection) => {
 
 			case "startGame":
 				matchStarted = true;
-				connections.admin.forEach((c) => {
-					const reply: messageToClient = { type: "gameStarted" };
-					c.send(JSON.stringify(reply));
-				});
+
+				bulkSend("admin", { type: "gameStarted" });
 
 				log("LOG", "STAR", "Starting the game");
-
 				break;
 
 			case "nextQuestion":
@@ -228,11 +229,7 @@ wss.on("connection", (conn: Connection) => {
 				answersReceived = 0;
 				correctVotesThisTurn = 0;
 
-				if (questionNumber === allQuestions.length - 1)
-					connections.admin.forEach((c) => {
-						const reply: messageToClient = { type: "lastQuestion" };
-						c.send(JSON.stringify(reply));
-					});
+				if (questionNumber === allQuestions.length - 1) bulkSend("admin", { type: "lastQuestion" });
 
 				const answers: ArrayOf4<string> = [
 					allQuestions[questionNumber].correct,
@@ -271,10 +268,7 @@ wss.on("connection", (conn: Connection) => {
 				countdownInterval = setInterval(() => {
 					if (countdownCnt === 0) clearInterval(countdownInterval);
 
-					[...connections.presenter, ...connections.user].forEach((c) => {
-						const reply: messageToClient = { type: "countdown", value: countdownCnt };
-						c.send(JSON.stringify(reply));
-					});
+					bulkSend(["presenter", "user"], { type: "countdown", value: countdownCnt });
 
 					--countdownCnt;
 
@@ -282,43 +276,33 @@ wss.on("connection", (conn: Connection) => {
 					if (countdownCnt == -1) {
 						log("LOG", "VOST", `Starting voting on question #${questionNumber + 1}`);
 
-						[...connections.presenter, ...connections.user].forEach((c) => {
-							const reply: messageToClient = { type: "questions", questions: thisQuestion };
-							c.send(JSON.stringify(reply));
-						});
+						bulkSend(["presenter", "user"], { type: "questions", questions: thisQuestion });
 
 						voteTimerCnt = secondsVote;
 						votingInterval = setInterval(() => {
 							if (voteTimerCnt === 0) clearInterval(votingInterval);
 
-							[...connections.presenter, ...connections.user].forEach((c) => {
-								const reply: messageToClient = { type: "timeLeft", value: voteTimerCnt };
-								c.send(JSON.stringify(reply));
-							});
+							bulkSend(["presenter", "user"], { type: "timeLeft", value: voteTimerCnt });
 
 							--voteTimerCnt;
 
 							// When vote timer is finished, send the results
 							if (voteTimerCnt < 0) {
 								log("LOG", "VOEN", `Voting closed for question #${questionNumber + 1}`);
-								connections.presenter.forEach((c) => {
-									const reply: messageToClient = { type: "allResults", scores: answerCount };
-									c.send(JSON.stringify(reply));
-								});
+								bulkSend("presenter", { type: "allResults", scores: answerCount });
 
 								const leaderboard = Object.entries(totScores)
 									.sort(([n1, s1], [n2, s2]) => s2 - s1)
 									.map(([name, score]) => name);
 
-								connections.user.forEach((c, index) => {
+								bulkSend("user", (c) => {
 									const user = Object.entries(usernameConn).filter(([u, c2]) => c2 === c)[0][0];
-									const reply: messageToClient = {
+									return {
 										type: "userResult",
 										score: thisRoundScores[user],
 										totScore: totScores[user],
 										position: 1 + leaderboard.indexOf(user)
 									};
-									c.send(JSON.stringify(reply));
 								});
 							}
 						}, 1000);
@@ -331,22 +315,16 @@ wss.on("connection", (conn: Connection) => {
 					.sort(([n1, s1], [n2, s2]) => s2 - s1)
 					.map(([name, score]) => name);
 
-				connections.presenter.forEach((c) => {
-					const reply: messageToClient = { type: "finalLeaderboard", leaderboard };
-					c.send(JSON.stringify(reply));
-				});
+				bulkSend("presenter", { type: "finalLeaderboard", leaderboard });
 
 				log("LOG", "LEAD", "Sending leaderboard to presenters");
 				break;
 
 			case "sendCorrectAnswers":
 				const destUserType = message.to;
-				connections[destUserType].forEach((c) => {
-					const reply: messageToClient = {
-						type: "correctAnswers",
-						answers: allQuestions.map((question) => question.correct)
-					};
-					c.send(JSON.stringify(reply));
+				bulkSend(destUserType, {
+					type: "correctAnswers",
+					answers: allQuestions.map((question) => question.correct)
 				});
 
 				log("LOG", "ANSW", `Sending correct answers to ${destUserType}s`);
@@ -356,10 +334,7 @@ wss.on("connection", (conn: Connection) => {
 				const notification = message.notification;
 				const recipient = message.to;
 
-				connections[recipient].forEach((c) => {
-					const reply: messageToClient = { type: "notify", notification };
-					c.send(JSON.stringify(reply));
-				});
+				bulkSend(recipient, { type: "notify", notification });
 
 				log("LOG", "NOTI", `Notifying ${recipient}s: "${notification}"`);
 				break;
