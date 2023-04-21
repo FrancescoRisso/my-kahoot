@@ -7,6 +7,7 @@ const moment = require("moment");
 const express = require("express");
 const http = require("http");
 const _ = require("underscore");
+const os = require("os");
 
 const PORT = 1234;
 
@@ -95,6 +96,18 @@ wss.on("connection", (conn: Connection) => {
 
 				// Add to the correct set of connections
 				connections[message.userType].push(conn);
+
+				if (userType === "presenter") {
+					const ipInfo: messageToClient = {
+						type: "ipAddr",
+						addr: JSON.stringify(
+							os
+								.networkInterfaces()
+								.Ethernet.filter((addr: { family: string }) => addr.family === "IPv4")[0].address
+						)
+					};
+					conn.send(JSON.stringify(ipInfo));
+				}
 
 				log("LOG", "TYPE", `A user is of type ${userType}`);
 				break;

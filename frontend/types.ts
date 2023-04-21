@@ -43,4 +43,5 @@ export type messageToClient =
 	| { type: "countdown"; value: number }
 	| { type: "timeLeft"; value: number }
 	| { type: "userResult"; score: number; totScore: number; position: number }
-	| { type: "allResults"; scores: Record<AnswerColors, number> };
+	| { type: "allResults"; scores: Record<AnswerColors, number> }
+	| { type: "ipAddr"; addr: string };
