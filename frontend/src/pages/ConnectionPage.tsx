@@ -20,6 +20,7 @@ import { Context } from "../components/Context";
 import UserWaitingPage from "./UserWaitingPage";
 import PresenterTextPage from "./PresenterTextPage";
 import TestingButtons from "../components/TestingButtons";
+import AdminBehaviourPage from "./AdminBehaviourPage";
 
 export interface ConnectionPageProps {
 	userType: userTypes;
@@ -34,9 +35,13 @@ const ConnectionPage = ({ userType, testingButtons }: ConnectionPageProps) => {
 	// Temporary tests to check functionality of the server
 	if (connection === "accepted") {
 		if (testingButtons) return <TestingButtons userType={userType} />;
-		else {
-			return <></>;
-		}
+		else
+			switch (userType) {
+				case "admin":
+					return <AdminBehaviourPage />;
+				default:
+					return <></>;
+			}
 	}
 
 	if (connection === "refused")
@@ -64,7 +69,6 @@ const ConnectionPage = ({ userType, testingButtons }: ConnectionPageProps) => {
 							ws.addEventListener("open", () => {
 								const message: messageToServer = { type: "userType", userType };
 								ws.send(JSON.stringify(message));
-								console.debug(JSON.stringify(message));
 							});
 
 							ws.addEventListener("message", (msg) => {
@@ -74,7 +78,10 @@ const ConnectionPage = ({ userType, testingButtons }: ConnectionPageProps) => {
 							});
 
 							// TODO
-							ws.addEventListener("message", (msg) => console.debug(JSON.parse(msg.data)));
+							ws.addEventListener("message", (ev: MessageEvent) => {
+								const msg: messageToClient = JSON.parse(ev.data);
+								console.debug(msg);
+							});
 						}}
 					>
 						Entra
