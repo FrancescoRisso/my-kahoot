@@ -27,8 +27,10 @@ export type messageToServerTypes = "userType" | "userVote" | "userRegister";
 export type messageToServer =
 	| { type: "userType"; userType: userTypes }
 	| { type: "userRegister"; name: string }
-	| { type: "userVote"; vote: AnswerColors };
+	| { type: "usernameAvailable"; name: string };
+// | { type: "userVote"; vote: AnswerColors };
 
 export type messageToClient =
 	| { type: "userRegister"; accepted: true }
-	| { type: "userRegister"; accepted: false; reason: "gameInProgress" | "usernameAlreadyTaken" };
+	| { type: "userRegister"; accepted: false; reason: "gameInProgress" | "usernameAlreadyTaken" }
+	| { type: "usernameAvailable"; available: boolean };

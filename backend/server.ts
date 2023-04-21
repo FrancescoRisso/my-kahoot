@@ -1,4 +1,4 @@
-import type { messageToServer, userTypes } from "../frontend/types";
+import type { AnswerColors, messageToServer, userTypes } from "../frontend/types";
 import { messageToClient } from "../frontend/types";
 
 const webSocket = require("ws");
@@ -27,10 +27,17 @@ const connections: Record<userTypesExtended, Connection[]> = {
 	user: []
 };
 
-const totScores: Record<string, number> = {};
-const thisRoundScores: Record<string, number> = {};
+let totScores: Record<string, number> = {};
+let thisRoundScores: Record<string, number> = {};
 
-const usernamesList: string[] = [];
+let answerCount: Record<AnswerColors, number> = {
+	red: 0,
+	blue: 0,
+	yellow: 0,
+	green: 0
+};
+
+let usernamesList: string[] = [];
 
 const log = (type: logTypes, details: logDetails, message: string) => {
 	console.log(`${moment().format("YYYY-MM-DD HH:mm:ss")}\t[${type}]\t[${details}]\t${message}`);
@@ -50,28 +57,51 @@ wss.on("connection", (conn: Connection) => {
 		switch (message.type) {
 			case "userType":
 				userType = message.userType;
+
+				// Remove from unrecognised connections
 				connections.unrecognised.splice(connections.unrecognised.indexOf(conn), 1);
+
+				// Add to the correct set of connections
 				connections[message.userType].push(conn);
+
 				log("LOG", "TYPE", `A user is of type ${userType}`);
 				break;
 
 			case "userRegister":
 				username = message.name;
+
 				if (usernamesList.includes(username)) {
+					// username is taken
 					const reply: messageToClient = {
 						type: "userRegister",
 						accepted: false,
 						reason: "usernameAlreadyTaken"
 					};
 					conn.send(JSON.stringify(reply));
+
+					log("LOG", "OCCU", `A user requested the name "${username}", which is already used`);
 					username = "";
-					log("LOG", "REGI", `A user has chosen the name "${username}"`);
 				} else {
+					// username is free
 					usernamesList.push(username);
+
 					const reply: messageToClient = { type: "userRegister", accepted: true };
 					conn.send(JSON.stringify(reply));
-					log("LOG", "OCCU", `A user requested the name "${username}", which is already used`);
+
+					totScores[username] = 0;
+					thisRoundScores[username] = 0;
+
+					log("LOG", "REGI", `A user has chosen the name "${username}"`);
 				}
+				break;
+
+			case "usernameAvailable":
+				username = message.name;
+				const reply: messageToClient = {
+					type: "usernameAvailable",
+					available: !usernamesList.includes(username)
+				};
+				conn.send(JSON.stringify(reply));
 				break;
 		}
 	};
@@ -80,5 +110,3 @@ wss.on("connection", (conn: Connection) => {
 		connections[userType].splice(connections[userType].indexOf(conn), 1);
 	};
 });
-
-const messageHandler = () => {};

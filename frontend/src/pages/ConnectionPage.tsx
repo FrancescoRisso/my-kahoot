@@ -37,7 +37,33 @@ const ConnectionPage = ({ userType }: ConnectionPageProps) => {
 
 	const context = useContext(Context);
 
-	if (connected) return <></>;
+	// Temporary tests to check functionality of the server
+	if (connected)
+		return (
+			<>
+				<IonButton
+					onClick={() => {
+						context.ws.val?.send(JSON.stringify({ type: "userRegister", name: "pippo" }));
+					}}
+				>
+					Registra pippo
+				</IonButton>
+				<IonButton
+					onClick={() => {
+						context.ws.val?.send(JSON.stringify({ type: "userRegister", name: "pluto" }));
+					}}
+				>
+					Registra pluto
+				</IonButton>
+				<IonButton
+					onClick={() => {
+						context.ws.val?.send(JSON.stringify({ type: "usernameAvailable", name: "pippo" }));
+					}}
+				>
+					Pippo è libero?
+				</IonButton>
+			</>
+		);
 
 	return (
 		<IonPage>
@@ -57,6 +83,9 @@ const ConnectionPage = ({ userType }: ConnectionPageProps) => {
 								ws.send(JSON.stringify(message));
 								console.debug(JSON.stringify(message));
 							});
+
+							// TODO
+							ws.addEventListener("message", (msg) => console.debug(JSON.parse(msg.data)));
 
 							setConnected(true);
 						}}
