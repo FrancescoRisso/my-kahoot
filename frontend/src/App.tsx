@@ -56,6 +56,10 @@ const App: React.FC = () => {
 								<ConnectionPage userType="user" />
 							</Route>
 
+							<Route exact path="/admin">
+								<ConnectionPage userType="admin" />
+							</Route>
+
 							<Route exact path="/presenterQuestion">
 								<PresenterQuestionPage
 									answers={{
@@ -206,7 +210,7 @@ const App: React.FC = () => {
 								<PresenterTextPage text={["Prova", "Altro test"]} />
 							</Route>
 
-							<Route exact path="/admin">
+							<Route exact path="/adminPage">
 								<AdminPage
 									allWords={Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map((l) => [
 										`${l}0`,

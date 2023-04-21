@@ -59,7 +59,7 @@ wss.on("connection", (conn: Connection) => {
 		return;
 	}
 
-	const reply: messageToClient = { type: "connectionAccepted" };
+	let reply: messageToClient = { type: "connectionAccepted" };
 	conn.send(JSON.stringify(reply));
 	log("LOG", "CONN", `New unknown user has connected`);
 
@@ -85,6 +85,15 @@ wss.on("connection", (conn: Connection) => {
 				break;
 
 			case "userRegister":
+				if (matchStarted) {
+					const reply: messageToClient = { type: "gameInProgress" };
+					conn.send(JSON.stringify(reply));
+					conn.close();
+
+					log("LOG", "REFU", `New user registration refused due to game started`);
+					return;
+				}
+
 				username = message.name;
 
 				if (usernamesList.includes(username)) {
@@ -138,6 +147,16 @@ wss.on("connection", (conn: Connection) => {
 				});
 
 				log("LOG", "VOTE", `${username} voted ${vote}`);
+				break;
+
+			case "startGame":
+				matchStarted = true;
+				connections.admin.forEach((c) => {
+					const reply: messageToClient = { type: "gameStarted" };
+					c.send(JSON.stringify(reply));
+				});
+
+				break;
 		}
 	};
 

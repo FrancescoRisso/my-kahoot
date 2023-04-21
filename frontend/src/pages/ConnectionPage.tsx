@@ -84,6 +84,14 @@ const ConnectionPage = ({ userType }: ConnectionPageProps) => {
 				>
 					Vota verde
 				</IonButton>
+				<IonButton
+					onClick={() => {
+						const msg: messageToServer = { type: "startGame"};
+						context.ws.val?.send(JSON.stringify(msg));
+					}}
+				>
+					Inizia partita
+				</IonButton>
 			</>
 		);
 

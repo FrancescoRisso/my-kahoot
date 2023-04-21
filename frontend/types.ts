@@ -28,11 +28,13 @@ export type messageToServer =
 	| { type: "userType"; userType: userTypes }
 	| { type: "userRegister"; name: string }
 	| { type: "usernameAvailable"; name: string }
-	| { type: "userVote"; vote: AnswerColors };
+	| { type: "userVote"; vote: AnswerColors }
+	| { type: "startGame" };
 
 export type messageToClient =
 	| { type: "userRegister"; accepted: boolean }
 	| { type: "gameInProgress" }
 	| { type: "connectionAccepted" }
 	| { type: "usernameAvailable"; available: boolean }
-	| { type: "numReplies"; value: number; totPlayers: number };
+	| { type: "numReplies"; value: number; totPlayers: number }
+	| { type: "gameStarted" };
