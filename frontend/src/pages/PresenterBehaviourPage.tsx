@@ -44,12 +44,13 @@ const PresenterBehaviourPage = () => {
 
 	const [numReplies, setNumReplies] = useState<number>(0);
 	const [totUsers, setTotUsers] = useState<number>(0);
-	const [questions, setQuestions] = useState<Record<AnswerColors, string>>({
+	const [answers, setAnswers] = useState<Record<AnswerColors, string>>({
 		red: "",
 		yellow: "",
 		blue: "",
 		green: ""
 	});
+	const [question, setQuestion] = useState<string>("");
 	const [timer, setTimer] = useState<number>(0);
 	const [leaderboard, setLeaderboard] = useState<string[]>([]);
 	const [votesPerAnswer, setVotesPerAnswer] = useState<Record<AnswerColors, number>>({
@@ -73,8 +74,9 @@ const PresenterBehaviourPage = () => {
 				setNumReplies(msg.value);
 				break;
 
-			case "questions":
-				setQuestions(msg.questions);
+			case "question":
+				setAnswers(msg.answers);
+				setQuestion(msg.question);
 				setCurrentStatus("question");
 				break;
 
@@ -154,14 +156,15 @@ const PresenterBehaviourPage = () => {
 		case "question":
 			return (
 				<PresenterQuestionPage
-					answers={questions}
+					question={question}
+					answers={answers}
 					remainingTime={timer}
 					submittedAnswers={numReplies}
 					totalUsers={totUsers}
 				/>
 			);
 		case "questionResult":
-			return <PresenterResultPage answers={questions} correctVote={correctColor} votes={votesPerAnswer} />;
+			return <PresenterResultPage answers={answers} correctVote={correctColor} votes={votesPerAnswer} />;
 		case "leaderboard":
 			return <PresenterRankingPage ranking={leaderboard} />;
 		case "allWords":

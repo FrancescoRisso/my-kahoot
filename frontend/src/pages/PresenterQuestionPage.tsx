@@ -23,13 +23,15 @@ export interface PresenterQuestionPageProps {
 	remainingTime: number;
 	submittedAnswers: number;
 	totalUsers: number;
+	question: string;
 }
 
 const PresenterQuestionPage = ({
 	answers,
 	remainingTime,
 	submittedAnswers,
-	totalUsers
+	totalUsers,
+	question
 }: PresenterQuestionPageProps) => {
 	return (
 		<IonPage>
@@ -48,9 +50,7 @@ const PresenterQuestionPage = ({
 						</IonCol>
 					</IonRow>
 				</IonGrid>
-				<h1 className="h-35-percent ion-text-center center-text-vertically no-margin">
-					Un animatore dovrebbe essere...
-				</h1>
+				<h1 className="h-35-percent ion-text-center center-text-vertically no-margin">{question}</h1>
 				<AnswerCollection cssClasses="h-50-percent" answers={answers} answersPerRow={2} selected={null} />
 			</IonContent>
 		</IonPage>

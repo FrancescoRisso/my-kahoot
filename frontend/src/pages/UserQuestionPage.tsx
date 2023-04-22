@@ -25,9 +25,17 @@ export interface PresenterQuestionPageProps {
 	username: string;
 	score: number;
 	clickEvent: (color: AnswerColors) => void;
+	question: string;
 }
 
-const UserQuestionPage = ({ answers, remainingTime, username, score, clickEvent }: PresenterQuestionPageProps) => {
+const UserQuestionPage = ({
+	answers,
+	remainingTime,
+	username,
+	score,
+	clickEvent,
+	question
+}: PresenterQuestionPageProps) => {
 	const [answer, setAnswer] = useState<AnswerColors | null>(null);
 
 	return (
@@ -50,9 +58,7 @@ const UserQuestionPage = ({ answers, remainingTime, username, score, clickEvent 
 						</IonCol>
 					</IonRow>
 				</IonGrid>
-				<h1 className="h-30-percent ion-text-center center-text-vertically no-margin">
-					Un animatore dovrebbe essere...
-				</h1>
+				<h1 className="h-30-percent ion-text-center center-text-vertically no-margin">{question}</h1>
 				<AnswerCollection
 					cssClasses="h-50-percent"
 					answers={answers}

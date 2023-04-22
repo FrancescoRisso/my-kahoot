@@ -36,7 +36,7 @@ export type messageToClient =
 	| { type: "usernameAvailable"; available: boolean }
 	| { type: "numReplies"; value: number }
 	| { type: "gameStarted" }
-	| { type: "questions"; questions: Record<AnswerColors, string> }
+	| { type: "question"; answers: Record<AnswerColors, string>; question: string }
 	| { type: "countdown"; value: number }
 	| { type: "timeLeft"; value: number }
 	| { type: "userResult"; score: number; totScore: number; position: number }

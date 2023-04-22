@@ -35,12 +35,13 @@ const UserBehaviourPage = () => {
 	const [username, setUsername] = useState<string>("");
 	const [usernameTaken, setUsernameTaken] = useState<boolean>(false);
 	const [usernameInvalid, setUsernameInvalid] = useState<boolean>(false);
-	const [questions, setQuestions] = useState<Record<AnswerColors, string>>({
+	const [answers, setAnswers] = useState<Record<AnswerColors, string>>({
 		red: "",
 		green: "",
 		yellow: "",
 		blue: ""
 	});
+	const [question, setQuestion] = useState<string>("");
 	const [timer, setTimer] = useState<number>(0);
 	const [totScore, setTotScore] = useState<number>(0);
 	const [roundScore, setRoundScore] = useState<number>(0);
@@ -69,8 +70,9 @@ const UserBehaviourPage = () => {
 				setUsernameTaken(!msg.available);
 				break;
 
-			case "questions":
-				setQuestions(msg.questions);
+			case "question":
+				setAnswers(msg.answers);
+				setQuestion(msg.question);
 				setCurrentStatus("question");
 				break;
 
@@ -129,13 +131,14 @@ const UserBehaviourPage = () => {
 		case "question":
 			return (
 				<UserQuestionPage
-					answers={questions}
+					answers={answers}
 					clickEvent={(color: AnswerColors) => {
 						sendMessage({ type: "userVote", vote: color });
 					}}
 					remainingTime={timer}
 					score={totScore}
 					username={username}
+					question={question}
 				/>
 			);
 

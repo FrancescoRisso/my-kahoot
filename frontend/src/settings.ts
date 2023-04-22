@@ -14,4 +14,4 @@ const usageRouter: settingsType = {
 	pwd: "giocone123"
 };
 
-export default usageRouter;
+export default casa;

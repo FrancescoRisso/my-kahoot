@@ -271,7 +271,11 @@ wss.on("connection", (conn: Connection) => {
 					if (countdownCnt == -1) {
 						log("LOG", "VOST", `Starting voting on question #${questionNumber + 1}`);
 
-						bulkSend(["presenter", "user"], { type: "questions", questions: thisQuestion });
+						bulkSend(["presenter", "user"], {
+							type: "question",
+							question: allQuestions[questionNumber].question,
+							answers: thisQuestion
+						});
 
 						voteTimerCnt = secondsVote;
 						votingInterval = setInterval(() => {
