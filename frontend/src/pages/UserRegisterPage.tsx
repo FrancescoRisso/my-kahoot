@@ -58,6 +58,8 @@ const UserLoginPage = ({ username, onUsernameChange, usernameTaken, clickEvent }
 								onInput={(e) => {
 									onUsernameChange(e.currentTarget.value?.toString() ?? "");
 								}}
+								counter={true}
+								maxlength={20}
 							></IonInput>
 						</IonItem>
 						<IonText className={`${username === "" ? "text-transparent" : ""}`}>

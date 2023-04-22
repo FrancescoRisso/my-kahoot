@@ -200,3 +200,7 @@ ion-card.ios {
 .highlight {
 	background-color: #0002;
 }
+
+.mobile ion-input .counter {
+	font-size: small;
+}
