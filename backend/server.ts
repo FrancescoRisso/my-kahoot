@@ -257,6 +257,11 @@ wss.on("connection", (conn: Connection) => {
 					green: shuffledAnswers[3]
 				};
 
+				// Choose a random correct answer if they are all the same
+				if (allQuestions[questionNumber].correct === allQuestions[questionNumber].wrong[0]) {
+					correctVote = _.shuffle(["yellow", "red", "green", "blue"])[0];
+				}
+
 				// Start countdown
 				log("LOG", "CDOW", `Starting countdown for question #${questionNumber + 1}`);
 				countdownCnt = secondsCountdown;
@@ -314,8 +319,7 @@ wss.on("connection", (conn: Connection) => {
 				break;
 
 			case "sendLeaderboard":
-				const leaderboard = Object.entries(totScores)
-					.sort(([n1, s1], [n2, s2]) => s2 - s1);
+				const leaderboard = Object.entries(totScores).sort(([n1, s1], [n2, s2]) => s2 - s1);
 
 				bulkSend("presenter", { type: "finalLeaderboard", leaderboard });
 
