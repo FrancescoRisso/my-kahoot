@@ -19,7 +19,7 @@ import { useMemo } from "react";
 import OrderedList from "../components/OrderedList";
 
 export interface PresenterRankingPageProps {
-	ranking: string[];
+	ranking: [string, number][];
 }
 
 const PresenterRankingPage = ({ ranking }: PresenterRankingPageProps) => {
@@ -40,7 +40,7 @@ const PresenterRankingPage = ({ ranking }: PresenterRankingPageProps) => {
 									{index}
 								</>
 							)}
-							items={ranking}
+							items={ranking.map(([name, score]) => `${name} (${score} pt.)`)}
 							numSplits={numSplits}
 							separator=" - "
 						/>

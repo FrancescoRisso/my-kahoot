@@ -315,8 +315,7 @@ wss.on("connection", (conn: Connection) => {
 
 			case "sendLeaderboard":
 				const leaderboard = Object.entries(totScores)
-					.sort(([n1, s1], [n2, s2]) => s2 - s1)
-					.map(([name, score]) => name);
+					.sort(([n1, s1], [n2, s2]) => s2 - s1);
 
 				bulkSend("presenter", { type: "finalLeaderboard", leaderboard });
 

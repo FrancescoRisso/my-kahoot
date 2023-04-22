@@ -52,7 +52,7 @@ const PresenterBehaviourPage = () => {
 	});
 	const [question, setQuestion] = useState<string>("");
 	const [timer, setTimer] = useState<number>(0);
-	const [leaderboard, setLeaderboard] = useState<string[]>([]);
+	const [leaderboard, setLeaderboard] = useState<[string, number][]>([]);
 	const [votesPerAnswer, setVotesPerAnswer] = useState<Record<AnswerColors, number>>({
 		red: 0,
 		yellow: 0,

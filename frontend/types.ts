@@ -42,7 +42,7 @@ export type messageToClient =
 	| { type: "userResult"; score: number; totScore: number; position: number }
 	| { type: "allResults"; scores: Record<AnswerColors, number>; correctColor: AnswerColors }
 	| { type: "lastQuestion" }
-	| { type: "finalLeaderboard"; leaderboard: string[] }
+	| { type: "finalLeaderboard"; leaderboard: [string, number][] }
 	| { type: "allAnswers"; answers: ArrayOf4<string>[] }
 	| { type: "correctAnswers"; answers: string[] }
 	| { type: "notify"; notification: implementedNotifications }
