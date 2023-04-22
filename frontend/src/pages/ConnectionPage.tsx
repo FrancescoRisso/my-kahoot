@@ -22,7 +22,7 @@ import PresenterTextPage from "./PresenterTextPage";
 import TestingButtons from "../components/TestingButtons";
 import AdminBehaviourPage from "./AdminBehaviourPage";
 import UserBehaviourPage from "./UserBehaviourPage";
-import ip from "../getIp";
+import settings from "../settings";
 import PresenterBehaviourPage from "./PresenterBehaviourPage";
 
 export interface ConnectionPageProps {
@@ -65,7 +65,7 @@ const ConnectionPage = ({ userType, testingButtons }: ConnectionPageProps) => {
 						onClick={() => {
 							console.log("Connecting to the server");
 
-							const ADDR = ip;
+							const ADDR = settings.ip;
 							const PORT = 1234;
 							const ws = new WebSocket(`ws://${ADDR}:${PORT}`);
 

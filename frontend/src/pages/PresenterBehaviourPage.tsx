@@ -22,6 +22,7 @@ import PresenterQuestionPage from "./PresenterQuestionPage";
 import PresenterResultPage from "./PresenterResultPage";
 import PresenterRankingPage from "./PresenterLeaderboardPage";
 import PresenterWordsRecap from "./PresenterWordsRecap";
+import settings from "../settings";
 
 export interface PresenterBehaviourPageProps {}
 
@@ -57,7 +58,6 @@ const PresenterBehaviourPage = () => {
 		blue: 0,
 		green: 0
 	});
-	const [ip, setIp] = useState<string>("");
 	const [correcAnswers, setCorrectAnswers] = useState<string[]>([]);
 	const [correctColor, setCorrectColor] = useState<AnswerColors>("red");
 
@@ -91,10 +91,6 @@ const PresenterBehaviourPage = () => {
 				setVotesPerAnswer(msg.scores);
 				setCorrectColor(msg.correctColor);
 				setCurrentStatus("questionResult");
-				break;
-
-			case "ipAddr":
-				setIp(msg.addr.replaceAll('"', ""));
 				break;
 
 			case "finalLeaderboard":
@@ -144,10 +140,10 @@ const PresenterBehaviourPage = () => {
 			return (
 				<PresenterTextPage
 					text={[
-						"Collegatevi al WiFi NOME",
-						"(password: PASS)",
+						`Collegatevi al WiFi "${settings.wifi}"`,
+						`(password: "${settings.pwd}")`,
 						"Aprite un browser (Chrome, Safari, ...)",
-						`Andate all'url "${ip}:8100"`,
+						`Andate all'url "${settings.ip}:8100"`,
 						`Cliccate "ENTRA" e registratevi`
 					]}
 					cornerText={`Utenti registrati: ${totUsers}`}

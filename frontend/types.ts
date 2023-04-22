@@ -41,7 +41,6 @@ export type messageToClient =
 	| { type: "timeLeft"; value: number }
 	| { type: "userResult"; score: number; totScore: number; position: number }
 	| { type: "allResults"; scores: Record<AnswerColors, number>; correctColor: AnswerColors }
-	| { type: "ipAddr"; addr: string }
 	| { type: "lastQuestion" }
 	| { type: "finalLeaderboard"; leaderboard: string[] }
 	| { type: "allAnswers"; answers: ArrayOf4<string>[] }
