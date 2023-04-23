@@ -7,15 +7,32 @@ export interface question {
 }
 
 const tmpQuestions: question[] = [
+	{
+		question: "Round di test",
+		correct: "Risposta corretta",
+		wrong: ["Risposta errata", "Risposta errata", "Risposta errata"]
+	},
 	{ question: "Quale operazione è corretta?", correct: "1+1=2", wrong: ["1+1=0", "1+1=1", "1+1=3"] },
 	{ question: "Quale operazione è corretta?", correct: "2*2=4", wrong: ["3*2=9", "5*4=15", "2*2=8"] },
 	{ question: "Quale operazione è corretta?", correct: "1-1=0", wrong: ["11-10=0", "1-0=0", "0-1=3"] },
 	{ question: "Quale operazione è corretta?", correct: "6/2=3", wrong: ["6/2=4", "6/2=2", "8/4=3"] }
 ];
 
+const fakeQuestions: question[] = [
+	{ question: "Quale operazione è corretta?", correct: "giusta", wrong: ["sbagliata", "sbagliata", "sbagliata"] },
+	{ question: "Quale operazione è corretta?", correct: "giusta", wrong: ["sbagliata", "sbagliata", "sbagliata"] },
+	{ question: "Quale operazione è corretta?", correct: "giusta", wrong: ["sbagliata", "sbagliata", "sbagliata"] },
+	{ question: "Quale operazione è corretta?", correct: "giusta", wrong: ["sbagliata", "sbagliata", "sbagliata"] }
+];
+
 const sameQuestion = "Un animatore dovrebbe essere...";
 
 const realQuestions: question[] = [
+	{
+		question: "Round di test",
+		correct: "Risposta corretta",
+		wrong: ["Risposta errata", "Risposta errata", "Risposta errata"]
+	},
 	{
 		question: sameQuestion,
 		correct: "Autorevole",

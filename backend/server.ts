@@ -83,6 +83,8 @@ let voteTimerCnt: number;
 
 let usernamesList: string[] = [];
 
+let isTestRound: boolean = true;
+
 const log = (type: logTypes, details: logDetails, message: string) => {
 	console.log(`${moment().format("YYYY-MM-DD HH:mm:ss")}\t[${type}]\t[${details}]\t${message}`);
 };
@@ -214,6 +216,11 @@ wss.on("connection", (conn: Connection) => {
 				if (vote === correctVote) {
 					thisRoundScores[username] = numPlayers - correctVotesThisTurn++;
 					totScores[username] += thisRoundScores[username];
+
+					if (isTestRound) {
+						thisRoundScores[username] = 0;
+						totScores[username] = 0;
+					}
 				}
 
 				bulkSend("presenter", { type: "numReplies", value: answersReceived });
@@ -335,6 +342,8 @@ wss.on("connection", (conn: Connection) => {
 										position: leaderboard.filter(({ name }) => name === user)[0].position
 									};
 								});
+
+								isTestRound = false;
 							}
 						}, 1000);
 					}
