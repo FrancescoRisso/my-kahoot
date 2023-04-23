@@ -18,6 +18,8 @@ export interface ContextStructure {
 
 export type implementedNotifications = "showIntro" | "showServiceInfos" | "showFinalBlank";
 
+export type userLeaderboardValues = { name: string; score: number; position: number };
+
 export type messageToServer =
 	| { type: "userType"; userType: userTypes }
 	| { type: "userRegister"; name: string }
@@ -42,7 +44,7 @@ export type messageToClient =
 	| { type: "userResult"; score: number; totScore: number; position: number }
 	| { type: "allResults"; scores: Record<AnswerColors, number>; correctColor: AnswerColors }
 	| { type: "lastQuestion" }
-	| { type: "finalLeaderboard"; leaderboard: [string, number][] }
+	| { type: "finalLeaderboard"; leaderboard: userLeaderboardValues[] }
 	| { type: "allAnswers"; answers: ArrayOf4<string>[] }
 	| { type: "correctAnswers"; answers: string[] }
 	| { type: "notify"; notification: implementedNotifications }

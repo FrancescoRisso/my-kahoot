@@ -1,4 +1,11 @@
-import type { AnswerColors, ArrayOf4, messageToServer, userTypes, messageToClient } from "../frontend/types";
+import type {
+	AnswerColors,
+	ArrayOf4,
+	messageToServer,
+	userTypes,
+	messageToClient,
+	userLeaderboardValues
+} from "../frontend/types";
 
 import allQuestions from "./allQuestions";
 
@@ -91,6 +98,19 @@ const bulkSend = (
 	});
 };
 
+const getLeaderboard = () => {
+	const leaderboard = Object.entries(totScores)
+		.sort(([n1, s1], [n2, s2]) => s2 - s1)
+		.map(([name, score], index): userLeaderboardValues => {
+			return { name, score, position: index };
+		});
+
+	return leaderboard.map(({ name, score, position }) => {
+		while (position != 0 && leaderboard[position - 1].score === score) position--;
+		return { name, score, position: position + 1 };
+	});
+};
+
 wss.on("connection", (conn: Connection) => {
 	if (matchStarted) {
 		const reply: messageToClient = { type: "gameInProgress" };
@@ -127,6 +147,11 @@ wss.on("connection", (conn: Connection) => {
 						type: "allAnswers",
 						answers: allQuestions.map((question) => [question.correct, ...question.wrong])
 					};
+					conn.send(JSON.stringify(reply));
+				}
+
+				if (userType === "presenter") {
+					const reply: messageToClient = { type: "totUsers", totUsers: numPlayers };
 					conn.send(JSON.stringify(reply));
 				}
 
@@ -299,9 +324,7 @@ wss.on("connection", (conn: Connection) => {
 									correctColor: correctVote
 								});
 
-								const leaderboard = Object.entries(totScores)
-									.sort(([n1, s1], [n2, s2]) => s2 - s1)
-									.map(([name, score]) => name);
+								const leaderboard = getLeaderboard();
 
 								bulkSend("user", (c) => {
 									const user = Object.entries(usernameConn).filter(([u, c2]) => c2 === c)[0][0];
@@ -309,7 +332,7 @@ wss.on("connection", (conn: Connection) => {
 										type: "userResult",
 										score: thisRoundScores[user],
 										totScore: totScores[user],
-										position: 1 + leaderboard.indexOf(user)
+										position: leaderboard.filter(({ name }) => name === user)[0].position
 									};
 								});
 							}
@@ -319,9 +342,7 @@ wss.on("connection", (conn: Connection) => {
 				break;
 
 			case "sendLeaderboard":
-				const leaderboard = Object.entries(totScores).sort(([n1, s1], [n2, s2]) => s2 - s1);
-
-				bulkSend("presenter", { type: "finalLeaderboard", leaderboard });
+				bulkSend("presenter", { type: "finalLeaderboard", leaderboard: getLeaderboard() });
 
 				log("LOG", "LEAD", "Sending leaderboard to presenters");
 				break;

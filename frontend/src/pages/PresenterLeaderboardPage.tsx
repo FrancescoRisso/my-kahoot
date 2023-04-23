@@ -17,9 +17,10 @@ context:
 import { IonContent, IonGrid, IonPage, IonRow } from "@ionic/react";
 import { useMemo } from "react";
 import OrderedList from "../components/OrderedList";
+import { userLeaderboardValues } from "../../types";
 
 export interface PresenterRankingPageProps {
-	ranking: [string, number][];
+	ranking: userLeaderboardValues[];
 }
 
 const PresenterRankingPage = ({ ranking }: PresenterRankingPageProps) => {
@@ -34,13 +35,16 @@ const PresenterRankingPage = ({ ranking }: PresenterRankingPageProps) => {
 					</IonRow>
 					<IonRow className="h-80-percent">
 						<OrderedList
-							bulletGenerator={(index) => (
-								<>
-									# {index < 10 ? <span className="text-transparent">0</span> : <></>}
-									{index}
-								</>
-							)}
-							items={ranking.map(([name, score]) => `${name} (${score} pt.)`)}
+							bulletGenerator={(index: number) => {
+								const position = ranking[index - 1].position;
+								return (
+									<>
+										# {position < 10 ? <span className="text-transparent">0</span> : <></>}
+										{position}
+									</>
+								);
+							}}
+							items={ranking.map(({ name, score }) => `${name} (${score} pt.)`)}
 							numSplits={numSplits}
 							separator=" - "
 						/>

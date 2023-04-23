@@ -14,7 +14,7 @@ context:
 */
 
 import { useContext, useState, useCallback, useEffect } from "react";
-import { messageToClient, AnswerColors } from "../../types";
+import { messageToClient, AnswerColors, userLeaderboardValues } from "../../types";
 import { Context } from "../components/Context";
 import PresenterTextPage from "./PresenterTextPage";
 import CountdownPage from "./CountdownPage";
@@ -52,7 +52,7 @@ const PresenterBehaviourPage = () => {
 	});
 	const [question, setQuestion] = useState<string>("");
 	const [timer, setTimer] = useState<number>(0);
-	const [leaderboard, setLeaderboard] = useState<[string, number][]>([]);
+	const [leaderboard, setLeaderboard] = useState<userLeaderboardValues[]>([]);
 	const [votesPerAnswer, setVotesPerAnswer] = useState<Record<AnswerColors, number>>({
 		red: 0,
 		yellow: 0,
@@ -137,6 +137,7 @@ const PresenterBehaviourPage = () => {
 		case "blankPage":
 			return <PresenterTextPage text="" />;
 		case "ABC":
+			// return <PresenterTextPage text="Kahoot fatto in casa" />;
 			return <PresenterTextPage text="ABC dell'animatore" />;
 		case "serviceInfos":
 			return (
