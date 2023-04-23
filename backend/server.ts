@@ -370,6 +370,12 @@ wss.on("connection", (conn: Connection) => {
 
 	conn.onclose = (ev: CloseEvent) => {
 		connections[userType].splice(connections[userType].indexOf(conn), 1);
+
+		if (userType === "user") {
+			numPlayers--;
+			bulkSend("presenter", { type: "totUsers", totUsers: numPlayers });
+		}
+
 		log(
 			"LOG",
 			"CLOS",
