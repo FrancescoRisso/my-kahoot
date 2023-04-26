@@ -23,16 +23,18 @@ import CountdownPage from "./CountdownPage";
 import UserWaitingPage from "./UserWaitingPage";
 import UserResultPage from "./UserResultPage";
 
-export interface UserBehaviourPageProps {}
+export interface UserBehaviourPageProps {
+	username: string;
+	setUsername: (newName: string) => void;
+}
 
 type validStatus = "selectUsername" | "waitForStart" | "countdown" | "question" | "questionResult";
 
-const UserBehaviourPage = () => {
+const UserBehaviourPage = ({ username, setUsername }: UserBehaviourPageProps) => {
 	const context = useContext(Context);
 
 	const [currentStatus, setCurrentStatus] = useState<validStatus>("selectUsername");
 
-	const [username, setUsername] = useState<string>("");
 	const [usernameTaken, setUsernameTaken] = useState<boolean>(false);
 	const [usernameInvalid, setUsernameInvalid] = useState<boolean>(false);
 	const [answers, setAnswers] = useState<Record<AnswerColors, string>>({

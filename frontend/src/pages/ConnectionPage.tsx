@@ -33,6 +33,8 @@ export interface ConnectionPageProps {
 const ConnectionPage = ({ userType, testingButtons }: ConnectionPageProps) => {
 	const [connection, setConnection] = useState<"opening" | "accepted" | "refused">("opening");
 
+	const [username, setUsername] = useState<string>("");
+
 	const context = useContext(Context);
 
 	if (connection === "accepted") {
@@ -42,7 +44,7 @@ const ConnectionPage = ({ userType, testingButtons }: ConnectionPageProps) => {
 				case "admin":
 					return <AdminBehaviourPage />;
 				case "user":
-					return <UserBehaviourPage />;
+					return <UserBehaviourPage username={username} setUsername={setUsername} />;
 				case "presenter":
 					return <PresenterBehaviourPage />;
 			}
@@ -86,6 +88,10 @@ const ConnectionPage = ({ userType, testingButtons }: ConnectionPageProps) => {
 							ws.addEventListener("message", (ev: MessageEvent) => {
 								const msg: messageToClient = JSON.parse(ev.data);
 								console.debug(msg);
+							});
+
+							ws.addEventListener("close", () => {
+								setConnection("opening");
 							});
 						}}
 					>
