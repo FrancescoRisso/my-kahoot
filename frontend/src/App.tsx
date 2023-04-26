@@ -23,10 +23,27 @@ import "./theme/variables.css";
 import "./App.css";
 import ContextProvider from "./components/Context";
 import ConnectionPage from "./pages/ConnectionPage";
+import { useEffect } from "react";
 
 setupIonicReact();
 
 const App: React.FC = () => {
+	useEffect(() => {
+		window.addEventListener(
+			"beforeunload",
+			(e) => {
+				e.preventDefault();
+				return (e.returnValue =
+					"Se esci dal sito, verrai rimosso dalla partita e non potrai rientrare a metà.");
+			},
+			{ capture: true }
+		);
+
+		// return () => {
+		// 	alert("Se esci dal sito, verrai rimosso dalla partita e non potrai rientrare a metà.");
+		// };
+	});
+
 	return (
 		<IonApp>
 			<ContextProvider
