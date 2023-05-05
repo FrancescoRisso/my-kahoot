@@ -24,6 +24,7 @@ import "./App.css";
 import ContextProvider from "./components/Context";
 import ConnectionPage from "./pages/ConnectionPage";
 import { useEffect } from "react";
+import RequirePassword from "./components/RequirePassword";
 
 setupIonicReact();
 
@@ -51,7 +52,7 @@ const App: React.FC = () => {
 					<IonReactRouter>
 						<IonRouterOutlet>
 							<Route exact path="/presenter">
-								<ConnectionPage userType="presenter" />
+								<RequirePassword password="ciao" content={<ConnectionPage userType="presenter" />} />
 							</Route>
 
 							<Route exact path="/user">
@@ -59,10 +60,10 @@ const App: React.FC = () => {
 							</Route>
 
 							<Route exact path="/admin">
-								<ConnectionPage userType="admin" />
+								<RequirePassword password="cane" content={<ConnectionPage userType="admin" />} />
 							</Route>
 
-							<Route exact path="/presenterTesting">
+							{/* <Route exact path="/presenterTesting">
 								<ConnectionPage userType="presenter" testingButtons />
 							</Route>
 
@@ -72,7 +73,7 @@ const App: React.FC = () => {
 
 							<Route exact path="/adminTesting">
 								<ConnectionPage userType="admin" testingButtons />
-							</Route>
+							</Route> */}
 
 							<Route>
 								<Redirect to="/user" />
