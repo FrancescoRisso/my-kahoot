@@ -84,6 +84,10 @@ const ConnectionPage = ({ userType, testingButtons }: ConnectionPageProps) => {
 								if (message.type === "gameInProgress") setConnection("refused");
 							});
 
+							setInterval(() => {
+								ws.send(JSON.stringify({ type: "ping" } as messageToServer));
+							}, 50 * 1000);
+
 							// TODO
 							ws.addEventListener("message", (ev: MessageEvent) => {
 								const msg: messageToClient = JSON.parse(ev.data);

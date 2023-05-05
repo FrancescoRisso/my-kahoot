@@ -374,6 +374,9 @@ wss.on("connection", (conn: Connection) => {
 
 				log("LOG", "NOTI", `Notifying ${recipient}s: "${notification}"`);
 				break;
+
+			case "ping":
+				conn.send(JSON.stringify({ type: "pong" } as messageToClient));
 		}
 	};
 

@@ -29,7 +29,8 @@ export type messageToServer =
 	| { type: "nextQuestion" }
 	| { type: "sendLeaderboard" }
 	| { type: "sendCorrectAnswers"; to: userTypes }
-	| { type: "requestNotify"; to: userTypes; notification: implementedNotifications };
+	| { type: "requestNotify"; to: userTypes; notification: implementedNotifications }
+	| { type: "ping" };
 
 export type messageToClient =
 	| { type: "userRegister"; accepted: boolean }
@@ -48,4 +49,5 @@ export type messageToClient =
 	| { type: "allAnswers"; answers: ArrayOf4<string>[] }
 	| { type: "correctAnswers"; answers: string[] }
 	| { type: "notify"; notification: implementedNotifications }
-	| { type: "totUsers"; totUsers: number };
+	| { type: "totUsers"; totUsers: number }
+	| { type: "pong" };
