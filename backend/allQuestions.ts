@@ -51,7 +51,7 @@ const realQuestions: question[] = [
 	{
 		question: sameQuestion,
 		correct: "Deciso",
-		wrong: ["Dispettoso", "Distratto", "Defenestrato"]
+		wrong: ["Dispettoso", "Distratto", "Don Beppe"]
 	},
 	{
 		question: sameQuestion,
@@ -131,7 +131,7 @@ const realQuestions: question[] = [
 	{
 		question: sameQuestion,
 		correct: "Tranquillo",
-		wrong: ["Tonto", "Titubante", "Tanto"]
+		wrong: ["Tonto", "Titubante", "Terrorista"]
 	},
 	{
 		question: sameQuestion,
@@ -140,8 +140,8 @@ const realQuestions: question[] = [
 	},
 	{
 		question: sameQuestion,
-		correct: "Versatile/Veritiero",
-		wrong: ["Vincitore", "Vegetale", "Vento"]
+		correct: "Versatile",
+		wrong: ["Vincitore", "Vegetale", "Vesuvio"]
 	},
 	{
 		question: sameQuestion,
@@ -165,4 +165,4 @@ const realQuestions: question[] = [
 	}
 ];
 
-export default tmpQuestions;
+export default realQuestions;
