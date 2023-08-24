@@ -33,6 +33,8 @@ export interface ConnectionPageProps {
 const ConnectionPage = ({ userType, testingButtons }: ConnectionPageProps) => {
 	const [connection, setConnection] = useState<"opening" | "accepted" | "refused">("opening");
 
+	const [token, setToken] = useState<string | undefined>(undefined);
+
 	const [username, setUsername] = useState<string>("");
 
 	const context = useContext(Context);
@@ -74,19 +76,45 @@ const ConnectionPage = ({ userType, testingButtons }: ConnectionPageProps) => {
 							context.ws.set(ws);
 							ws.addEventListener("open", () => {
 								console.log("Connected");
-								const message: messageToServer = { type: "userType", userType };
-								ws.send(JSON.stringify(message));
 							});
+
+							const acceptConnection = () => {
+								setConnection("accepted");
+								const reply: messageToServer = { type: "userType", userType };
+								ws.send(JSON.stringify(reply));
+							};
 
 							ws.addEventListener("message", (msg) => {
 								const message: messageToClient = JSON.parse(msg.data);
-								if (message.type === "connectionAccepted") setConnection("accepted");
-								if (message.type === "gameInProgress") setConnection("refused");
+
+								switch (message.type) {
+									case "gameInProgress":
+										setConnection("refused");
+										break;
+
+									case "tokenRequest":
+										ws.send(JSON.stringify({ type: "tokenResponse", token } as messageToServer));
+										break;
+
+									case "tokenAssign":
+										setToken(message.token);
+										acceptConnection();
+										break;
+
+									case "tokenConfirm":
+										acceptConnection();
+										break;
+
+									default:
+										break;
+								}
+
+								if (["tokenAssign, tokenConfirm"].includes(message.type)) setConnection("accepted");
 							});
 
-							setInterval(() => {
-								ws.send(JSON.stringify({ type: "ping" } as messageToServer));
-							}, 50 * 1000);
+							// setInterval(() => {
+							// 	ws.send(JSON.stringify({ type: "ping" } as messageToServer));
+							// }, 50 * 1000);
 
 							// TODO
 							ws.addEventListener("message", (ev: MessageEvent) => {

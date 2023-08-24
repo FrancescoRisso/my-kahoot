@@ -28,21 +28,23 @@ type Connection = WebSocket;
 type userTypesExtended = userTypes | "unrecognised";
 type logTypes = "LOG" | "ERR";
 type logDetails =
-	| "CONN"
-	| "REGI"
-	| "OCCU"
-	| "TYPE"
-	| "REFU"
-	| "VOTE"
-	| "STAR"
-	| "CDOW"
-	| "VOST"
-	| "VOEN"
-	| "VOAL"
-	| "LEAD"
-	| "NOTI"
-	| "ANSW"
-	| "CLOS";
+	| "CONN" // connected
+	| "REGI" // registered
+	| "OCCU" // username occupied
+	| "TYPE" // user set its type
+	| "REFU" // connection refused
+	| "VOTE" // user voted
+	| "STAR" // game starting
+	| "CDOW" // countdown
+	| "VOST" // voting started
+	| "VOEN" // voting ended
+	| "VOAL" // everybody voted
+	| "LEAD" // sending leaderboard
+	| "NOTI" // notification
+	| "ANSW" // sending all answers
+	| "CLOS" // user closed connection
+	| "NTOK" // new token assigned
+	| "ETOK"; // existing token logged in
 
 const connections: Record<userTypesExtended, Connection[]> = {
 	admin: [],
@@ -66,7 +68,11 @@ let correctVotesThisTurn: number = 0;
 let numPlayers: number = 0;
 let answersReceived: number = 0;
 
-let usernameConn: Record<string, Connection> = {};
+let tokenConn: Record<string, Connection> = {};
+let tokenUsername: Record<string, string> = {};
+let tokenUserTypes: Record<string, userTypesExtended> = {};
+
+let numConnections: number = 0;
 
 let thisQuestion: Record<AnswerColors, string> = { red: "", yellow: "", green: "", blue: "" };
 let questionNumber: number = -1;
@@ -114,29 +120,61 @@ const getLeaderboard = () => {
 };
 
 wss.on("connection", (conn: Connection) => {
-	if (matchStarted) {
-		const reply: messageToClient = { type: "gameInProgress" };
-		conn.send(JSON.stringify(reply));
-		conn.close();
-		log("LOG", "REFU", `New unknown refused due to game started`);
-		return;
-	}
+	// if (matchStarted) {
+	// 	const reply: messageToClient = { type: "gameInProgress" };
+	// 	conn.send(JSON.stringify(reply));
+	// 	conn.close();
+	// 	log("LOG", "REFU", `New unknown refused due to game started`);
+	// 	return;
+	// }
 
-	let reply: messageToClient = { type: "connectionAccepted" };
-	conn.send(JSON.stringify(reply));
-	log("LOG", "CONN", `New unknown user has connected`);
+	// let reply: messageToClient = { type: "connectionAccepted" };
+	// conn.send(JSON.stringify(reply));
+	// log("LOG", "CONN", `New unknown user has connected`);
 
 	connections.unrecognised.push(conn);
 
-	let userType: userTypesExtended = "unrecognised";
-	let username: string = "";
+	let token: string;
+
+	let tokenRequest: messageToClient = { type: "tokenRequest" };
+	conn.send(JSON.stringify(tokenRequest));
 
 	conn.onmessage = (ev: MessageEvent) => {
 		const message = JSON.parse(ev.data) as messageToServer;
 
 		switch (message.type) {
+			// Used to relog when logout happens
+			case "tokenResponse":
+				let tokenResponse: string | undefined = message.token;
+
+				if (!tokenResponse || !Object.keys(tokenConn).includes(tokenResponse)) {
+					token = `${++numConnections}`;
+					tokenConn[token] = conn;
+					tokenUserTypes[token] = "unrecognised";
+
+					const sendToken: messageToClient = { type: "tokenAssign", token: token };
+					conn.send(JSON.stringify(sendToken));
+
+					log("LOG", "NTOK", `A user was assigned token ${token}`);
+				} else {
+					token = tokenResponse;
+
+					const confirmToken: messageToClient = { type: "tokenConfirm" };
+					conn.send(JSON.stringify(confirmToken));
+
+					log(
+						"LOG",
+						"ETOK",
+						`User with token ${token} ${
+							tokenUsername[token] && `(username: ${tokenUsername[token]}) `
+						}logged back in`
+					);
+				}
+
+				break;
+
 			case "userType":
-				userType = message.userType;
+				tokenUserTypes[token] = message.userType;
 
 				// Remove from unrecognised connections
 				connections.unrecognised.splice(connections.unrecognised.indexOf(conn), 1);
@@ -144,7 +182,7 @@ wss.on("connection", (conn: Connection) => {
 				// Add to the correct set of connections
 				connections[message.userType].push(conn);
 
-				if (userType === "admin") {
+				if (tokenUserTypes[token] === "admin") {
 					const reply: messageToClient = {
 						type: "allAnswers",
 						answers: allQuestions.map((question) => [question.correct, ...question.wrong])
@@ -152,12 +190,12 @@ wss.on("connection", (conn: Connection) => {
 					conn.send(JSON.stringify(reply));
 				}
 
-				if (userType === "presenter") {
+				if (tokenUserTypes[token] === "presenter") {
 					const reply: messageToClient = { type: "totUsers", totUsers: numPlayers };
 					conn.send(JSON.stringify(reply));
 				}
 
-				log("LOG", "TYPE", `A user is of type ${userType}`);
+				log("LOG", "TYPE", `A user is of type ${tokenUserTypes[token]}`);
 				break;
 
 			case "userRegister":
@@ -170,7 +208,7 @@ wss.on("connection", (conn: Connection) => {
 					return;
 				}
 
-				username = message.name;
+				let username = message.name;
 
 				if (usernamesList.includes(username)) {
 					// username is taken
@@ -182,13 +220,14 @@ wss.on("connection", (conn: Connection) => {
 				} else {
 					// username is free
 					usernamesList.push(username);
-					usernameConn[username] = conn;
+					tokenConn[token] = conn;
+					tokenUsername[token] = username;
 
 					const reply: messageToClient = { type: "userRegister", accepted: true };
 					conn.send(JSON.stringify(reply));
 
-					totScores[username] = 0;
-					thisRoundScores[username] = 0;
+					totScores[token] = 0;
+					thisRoundScores[token] = 0;
 					numPlayers++;
 
 					bulkSend("presenter", { type: "totUsers", totUsers: numPlayers });
@@ -198,11 +237,11 @@ wss.on("connection", (conn: Connection) => {
 				break;
 
 			case "usernameAvailable":
-				username = message.name;
+				let requestedUsername = message.name;
 
 				const reply: messageToClient = {
 					type: "usernameAvailable",
-					available: !usernamesList.includes(username)
+					available: !usernamesList.includes(requestedUsername)
 				};
 				conn.send(JSON.stringify(reply));
 				break;
@@ -214,18 +253,18 @@ wss.on("connection", (conn: Connection) => {
 				answerCount[vote]++;
 
 				if (vote === correctVote) {
-					thisRoundScores[username] = numPlayers - correctVotesThisTurn++;
-					totScores[username] += thisRoundScores[username];
+					thisRoundScores[token] = numPlayers - correctVotesThisTurn++;
+					totScores[token] += thisRoundScores[token];
 
 					if (isTestRound) {
-						thisRoundScores[username] = 0;
-						totScores[username] = 0;
+						thisRoundScores[token] = 0;
+						totScores[token] = 0;
 					}
 				}
 
 				bulkSend("presenter", { type: "numReplies", value: answersReceived });
 
-				log("LOG", "VOTE", `${username} voted ${vote}`);
+				log("LOG", "VOTE", `${tokenUsername[token]} voted ${vote}`);
 
 				if (answersReceived === numPlayers) {
 					voteTimerCnt = 0;
@@ -238,7 +277,7 @@ wss.on("connection", (conn: Connection) => {
 
 				bulkSend("unrecognised", { type: "gameInProgress" });
 				connections.user.forEach((c) => {
-					if (!Object.values(usernameConn).includes(c)) {
+					if (!Object.values(tokenConn).includes(c)) {
 						c.send(JSON.stringify({ type: "gameInProgress" } as messageToClient));
 						c.close();
 					}
@@ -334,7 +373,7 @@ wss.on("connection", (conn: Connection) => {
 								const leaderboard = getLeaderboard();
 
 								bulkSend("user", (c) => {
-									const user = Object.entries(usernameConn).filter(([u, c2]) => c2 === c)[0][0];
+									const user = Object.entries(tokenConn).filter(([u, c2]) => c2 === c)[0][0];
 									return {
 										type: "userResult",
 										score: thisRoundScores[user],
@@ -375,23 +414,25 @@ wss.on("connection", (conn: Connection) => {
 				log("LOG", "NOTI", `Notifying ${recipient}s: "${notification}"`);
 				break;
 
-			case "ping":
-				conn.send(JSON.stringify({ type: "pong" } as messageToClient));
+			// case "ping":
+			// 	conn.send(JSON.stringify({ type: "pong" } as messageToClient));
 		}
 	};
 
 	conn.onclose = (ev: CloseEvent) => {
-		connections[userType].splice(connections[userType].indexOf(conn), 1);
+		// connections[tokenUserTypes[token]].splice(connections[tokenUserTypes[token]].indexOf(conn), 1);
 
-		if (userType === "user") {
-			numPlayers--;
-			bulkSend("presenter", { type: "totUsers", totUsers: numPlayers });
-		}
+		// if (tokenUserTypes[token] === "user") {
+		// 	numPlayers--;
+		// 	bulkSend("presenter", { type: "totUsers", totUsers: numPlayers });
+		// }
 
 		log(
 			"LOG",
 			"CLOS",
-			userType === "user" ? `User ${username} closed connection` : `A ${userType} closed connection`
+			tokenUserTypes[token] === "user"
+				? `User ${tokenUsername[token]} closed connection`
+				: `A ${tokenUserTypes[token]} closed connection`
 		);
 	};
 });

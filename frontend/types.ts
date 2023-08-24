@@ -30,12 +30,13 @@ export type messageToServer =
 	| { type: "sendLeaderboard" }
 	| { type: "sendCorrectAnswers"; to: userTypes }
 	| { type: "requestNotify"; to: userTypes; notification: implementedNotifications }
-	| { type: "ping" };
+	| { type: "ping" }
+	| { type: "tokenResponse"; token: string | undefined };
 
 export type messageToClient =
 	| { type: "userRegister"; accepted: boolean }
 	| { type: "gameInProgress" }
-	| { type: "connectionAccepted" }
+	// | { type: "connectionAccepted" }
 	| { type: "usernameAvailable"; available: boolean }
 	| { type: "numReplies"; value: number }
 	| { type: "gameStarted" }
@@ -50,4 +51,7 @@ export type messageToClient =
 	| { type: "correctAnswers"; answers: string[] }
 	| { type: "notify"; notification: implementedNotifications }
 	| { type: "totUsers"; totUsers: number }
-	| { type: "pong" };
+	| { type: "pong" }
+	| { type: "tokenRequest" }
+	| { type: "tokenConfirm" }
+	| { type: "tokenAssign", token: string };

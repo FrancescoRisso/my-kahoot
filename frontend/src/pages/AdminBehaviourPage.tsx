@@ -51,10 +51,6 @@ const AdminBehaviourPage = () => {
 			const msg: messageToClient = JSON.parse(ev.data);
 
 			switch (msg.type) {
-				case "gameInProgress":
-					break;
-				case "connectionAccepted":
-					break;
 				case "gameStarted":
 					sendMessage({ type: "nextQuestion" });
 					setCurrentStatus("question");
@@ -64,6 +60,7 @@ const AdminBehaviourPage = () => {
 					setCurrentStatus("lastQuestion");
 					break;
 				case "allAnswers":
+					console.debug(msg.answers)
 					setAllAnswers(msg.answers);
 					break;
 				default:
