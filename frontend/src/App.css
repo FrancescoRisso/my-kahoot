@@ -3,21 +3,51 @@
 	height: 100%;
 }
 
-.desktop .bigger {
+/* 16:9 desktop */
+
+.desktop-16-9 .bigger {
+	font-size: xx-large;
+}
+
+.desktop-16-9 .even-bigger {
+	font-size: 6vh;
+}
+
+.desktop-16-9 .smaller {
+	font-size: small;
+}
+
+.desktop-16-9 * {
+	font-size: large;
+}
+
+.very-very-big.desktop-16-9 {
+	font-size: 60vh;
+}
+
+/* 3:4 desktop */
+
+.desktop-4-3 .bigger {
 	font-size: xxx-large;
 }
 
-.desktop .even-bigger {
+.desktop-4-3 .even-bigger {
 	font-size: 8vh;
 }
 
-.desktop .smaller {
+.desktop-4-3 .smaller {
 	font-size: x-large;
 }
 
-.desktop * {
+.desktop-4-3 * {
 	font-size: xx-large;
 }
+
+.very-very-big.desktop-4-3 {
+	font-size: 60vh;
+}
+
+/* mobile */
 
 .mobile * {
 	font-size: x-large;
@@ -30,6 +60,12 @@
 .mobile .smaller {
 	font-size: large;
 }
+
+.very-very-big.mobile {
+	font-size: 40vh;
+}
+
+/* percentage heights */
 
 .h-10-percent {
 	height: 10%;
@@ -165,14 +201,6 @@ ion-card.ios {
 	transform: translateY(-50%);
 }
 
-.very-very-big.desktop {
-	font-size: 60vh;
-}
-
-.very-very-big.mobile {
-	font-size: 40vh;
-}
-
 .scroll-y {
 	overflow-y: scroll;
 }
@@ -203,4 +231,9 @@ ion-card.ios {
 
 .mobile ion-input .counter {
 	font-size: small;
+}
+
+.padding-vertical {
+	padding-top: 1.25rem;
+	padding-bottom: 1.25rem;
 }

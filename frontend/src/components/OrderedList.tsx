@@ -21,9 +21,10 @@ export interface OrderedListProps {
 	separator: string;
 	bulletGenerator: (index: number) => string | JSX.Element;
 	numSplits: number;
+	smaller?: boolean;
 }
 
-const OrderedList = ({ items, separator, bulletGenerator, numSplits }: OrderedListProps) => {
+const OrderedList = ({ items, separator, bulletGenerator, numSplits, smaller }: OrderedListProps) => {
 	const splitsSize = useMemo(() => Math.ceil(items.length / numSplits), [items, numSplits]);
 	return (
 		<>
@@ -32,7 +33,7 @@ const OrderedList = ({ items, separator, bulletGenerator, numSplits }: OrderedLi
 					{items.slice(colNo * splitsSize, (colNo + 1) * splitsSize).map((item, index) => {
 						const pos = index + 1 + colNo * splitsSize;
 						return (
-							<p className="no-margin" key={pos}>
+							<p className={`no-margin ${smaller ? "smaller" : ""}`} key={pos}>
 								{bulletGenerator(pos)}
 								{separator}
 								{item}

@@ -24,6 +24,7 @@ export interface PresenterQuestionPageProps {
 	submittedAnswers: number;
 	totalUsers: number;
 	question: string;
+	screenFormat: "16-9" | "4-3";
 }
 
 const PresenterQuestionPage = ({
@@ -31,11 +32,12 @@ const PresenterQuestionPage = ({
 	remainingTime,
 	submittedAnswers,
 	totalUsers,
-	question
+	question,
+	screenFormat
 }: PresenterQuestionPageProps) => {
 	return (
 		<IonPage>
-			<IonContent className="desktop" color="light">
+			<IonContent className={`desktop-${screenFormat}`} color="light">
 				<IonGrid className="h-15-percent">
 					<IonRow className="ion-align-items-center h-100-percent">
 						<IonCol>

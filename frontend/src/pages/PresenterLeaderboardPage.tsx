@@ -21,15 +21,16 @@ import { userLeaderboardValues } from "../../types";
 
 export interface PresenterRankingPageProps {
 	ranking: userLeaderboardValues[];
+	screenFormat: "16-9" | "4-3";
 }
 
-const PresenterRankingPage = ({ ranking }: PresenterRankingPageProps) => {
+const PresenterRankingPage = ({ ranking, screenFormat }: PresenterRankingPageProps) => {
 	const numSplits = useMemo(() => 2, []);
 
 	return (
 		<IonPage>
 			<IonContent color="light">
-				<IonGrid className="desktop h-100-percent ion-padding-start ion-padding-end">
+				<IonGrid className={`desktop-${screenFormat} h-100-percent ion-padding-start ion-padding-end`}>
 					<IonRow className="h-15-percent ion-align-items-center">
 						<p className="no-margin ion-text-center bigger w-100-percent">Classifica</p>
 					</IonRow>

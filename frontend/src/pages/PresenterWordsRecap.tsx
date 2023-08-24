@@ -18,13 +18,14 @@ import OrderedList from "../components/OrderedList";
 
 export interface PresenterWordsRecapProps {
 	words: string[];
+	screenFormat: "16-9" | "4-3";
 }
 
-const PresenterWordsRecap = ({ words }: PresenterWordsRecapProps) => {
+const PresenterWordsRecap = ({ words, screenFormat }: PresenterWordsRecapProps) => {
 	return (
 		<IonPage>
 			<IonContent color="light">
-				<IonGrid className="desktop h-100-percent ion-padding-start ion-padding-end">
+				<IonGrid className={`desktop-${screenFormat} h-100-percent ion-padding-start ion-padding-end`}>
 					<IonRow className="h-20-percent ion-align-items-center">
 						<p className="no-margin ion-text-center bigger w-100-percent">Recap delle parole</p>
 					</IonRow>
@@ -34,6 +35,7 @@ const PresenterWordsRecap = ({ words }: PresenterWordsRecapProps) => {
 							bulletGenerator={(index) => ""}
 							separator=""
 							numSplits={3}
+							smaller={screenFormat === "16-9"}
 						/>
 					</IonRow>
 				</IonGrid>

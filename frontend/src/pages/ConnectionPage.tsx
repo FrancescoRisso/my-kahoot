@@ -56,7 +56,7 @@ const ConnectionPage = ({ userType, testingButtons }: ConnectionPageProps) => {
 				return <UserWaitingPage message="Non si può entrare a partita iniziata" />;
 			case "admin":
 			case "presenter":
-				return <PresenterTextPage text="Partita già iniziata" />;
+				return <PresenterTextPage text="Partita già iniziata" screenFormat="16-9" />;
 		}
 
 	return (

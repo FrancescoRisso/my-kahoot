@@ -18,7 +18,7 @@ import { IonContent, IonPage } from "@ionic/react";
 
 export interface PresenterCountdownPageProps {
 	timeLeft: number;
-	device: "desktop" | "mobile";
+	device: "desktop-16-9" | "desktop-4-3" | "mobile";
 }
 
 const CountdownPage = ({ timeLeft, device }: PresenterCountdownPageProps) => {

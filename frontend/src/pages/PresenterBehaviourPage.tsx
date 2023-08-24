@@ -13,7 +13,7 @@ context:
 	- 
 */
 
-import { useContext, useState, useCallback, useEffect } from "react";
+import { useContext, useState, useCallback, useEffect, useMemo } from "react";
 import { messageToClient, AnswerColors, userLeaderboardValues } from "../../types";
 import { Context } from "../components/Context";
 import PresenterTextPage from "./PresenterTextPage";
@@ -39,6 +39,8 @@ type validStatus =
 
 const PresenterBehaviourPage = () => {
 	const context = useContext(Context);
+
+	const screenFormat = useMemo<"16-9" | "4-3">(() => "16-9", []);
 
 	const [currentStatus, setCurrentStatus] = useState<validStatus>("blankPage");
 
@@ -135,10 +137,10 @@ const PresenterBehaviourPage = () => {
 
 	switch (currentStatus) {
 		case "blankPage":
-			return <PresenterTextPage text="" />;
+			return <PresenterTextPage text="" screenFormat={screenFormat} />;
 		case "ABC":
 			// return <PresenterTextPage text="Kahoot fatto in casa" />;
-			return <PresenterTextPage text="ABC dell'animatore" />;
+			return <PresenterTextPage screenFormat={screenFormat} text="ABC dell'animatore" />;
 		case "serviceInfos":
 			return (
 				<PresenterTextPage
@@ -150,10 +152,11 @@ const PresenterBehaviourPage = () => {
 						`Cliccate "ENTRA" e registratevi`
 					]}
 					cornerText={`Utenti registrati: ${totUsers}`}
+					screenFormat={screenFormat}
 				/>
 			);
 		case "countdown":
-			return <CountdownPage device="desktop" timeLeft={timer} />;
+			return <CountdownPage device={`desktop-${screenFormat}`} timeLeft={timer} />;
 		case "question":
 			return (
 				<PresenterQuestionPage
@@ -162,16 +165,24 @@ const PresenterBehaviourPage = () => {
 					remainingTime={timer}
 					submittedAnswers={numReplies}
 					totalUsers={totUsers}
+					screenFormat={screenFormat}
 				/>
 			);
 		case "questionResult":
-			return <PresenterResultPage answers={answers} correctVote={correctColor} votes={votesPerAnswer} />;
+			return (
+				<PresenterResultPage
+					answers={answers}
+					correctVote={correctColor}
+					votes={votesPerAnswer}
+					screenFormat={screenFormat}
+				/>
+			);
 		case "leaderboard":
-			return <PresenterRankingPage ranking={leaderboard} />;
+			return <PresenterRankingPage ranking={leaderboard} screenFormat={screenFormat} />;
 		case "allWords":
-			return <PresenterWordsRecap words={correcAnswers} />;
+			return <PresenterWordsRecap words={correcAnswers} screenFormat={screenFormat} />;
 		case "finalBlank":
-			return <PresenterTextPage text="" />;
+			return <PresenterTextPage text="" screenFormat={screenFormat} />;
 	}
 };
 
